@@ -1,0 +1,12 @@
+#,question_name,answers,group,type,evidence_bundle,feature_name,feature_display_name,fhir_resource_type,code_system,codes,valueset_oid,cql_expression,Referenced Feature,where_clause_attribute,where_clause_value,where_clause_during_begin,where_clause_during_after,relationship_fhir_resource_type,relationship_codes,relationship_code_system,relationship_valueset,relationship_where_clause,nlp_task_type,text_terms,values_before_terms,value_min,value_max,value_enum_set,logic,notes,autofill,autofill_mc_answer,default_answer,report_types,report_tags
+,Patient Retrieve,,Main,CQL,syphillis,Patient_Retrieve,,,,,,First([Patient]),,,,,,,,,,,,,,,,,,,,,,,
+4,Syphilis,,Main,CQL,syphilis,Syphilis_Condition,,Condition,http://snomed.info/sct,76272004,,,,,,,,,,,,,CQL,,,,,,,,,,,,
+5,Syphillis Concept Id,,Main,CQL,syphilis,Syphilis_Clinical_Treatment_Medication_Concept_Id,,,,,,2000000005',,,,,,,,,,,CQL,,,,,,,,,,,,
+6,Syphilis Answer Code,,Main,CQL,syphilis,Syphilis_Clinical_Treatment_Medication_Answer_Code,,,,,,'ValueAsConcept',,,,,,,,,,,CQL,,,,,,,,,,,,
+7,Medication Statements with Penicillin,,Main,CQL,syphilis,Syphilis_Clinical_Treatment_Medication_Penicillin_MedicationStatement,,MedicationStatement,http://www.nlm.nih.gov/research/umls/rxnorm,7984:308351,,,,,,,,,,,,,CQL,,,,,,,,,,,,
+8,Medication Statements with Ceftriaxone,,Main,CQL,syphilis,Syphilis_Clinical_Treatment_Medication_Ceftriaxone_MedicationStatement,,MedicationStatement,http://www.nlm.nih.gov/research/umls/rxnorm,1665021,,,,,,,,,,,,,CQL,,,,,,,,,,,,
+9,All Medication Statements,,Main,CQL,syphilis,Syphilis_Clinical_Treatment_Medication_All_MedicationStatement,,,,,,"""Syphilis_Clinical_Treatment_Medication_Penicillin_MedicationStatement"" union ""Syphilis_Clinical_Treatment_Medication_Ceftriaxone_MedicationStatement"" meds sort by effective asc",,,,,,,,,,,CQL,,,,,,,,,,,,
+10,First Syphilis Medication Statement,,Main,CQL,syphilis,First_Syphilis_Medication_Treatment,,,,,,"First(""Syphilis_Clinical_Treatment_Medication_All_MedicationStatement"")",,,,,,,,,,,CQL,,,,,,,,,,,,
+,Tuple return of Medication Statements with Pencillin,,Main,CQL,syphilis,Syphilis_Clinical_Treatment_Medication_Penicillin,,,,,,,,,,,,,,,,,CQL,,,,,,,,,,,,
+,Tuple return of Medication Statements with Ceftriaxone,,Main,CQL,syphilis,Syphilis_Clinical_Treatment_Medication_Ceftriaxone,,,,,,,,,,,,,,,,,CQL,,,,,,,,,,,,
+,Union of above tuples,,Main,CQL,syphilis,Syphilis_Clinical_Treatment_Medication,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
