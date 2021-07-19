@@ -1,0 +1,32 @@
+{
+    "type": "EventAndInclusion",
+    "concepts":[
+      {
+        "name": "myConcept",
+        "codeset": {
+          "codelist" : ["A56","A57"],
+          "system": "http://loinc.org"
+        }
+      }
+    ],
+    "event": {
+      "name": "Syphilis_Condition",
+      "fhirResource": "Condition",
+      "concept": "myConcept",
+      "returnField": "Onset",
+      "returnType" : "DateTime" 
+    },
+    "Inclusion": [
+      {
+        "fhirResource": "MedicationStatement",
+        "concept": "someconcept",
+        "resultType": "Drug",
+        "resultAnswer": "20000005",
+        "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
+        "filter": "First"
+      }
+    ],
+    "return aggregator" :{
+      "type": "union"
+    }
+}

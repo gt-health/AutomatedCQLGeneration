@@ -154,7 +154,7 @@ cql_template = '''
 
 # +
 cql_concept_template = '''
-        define "%s_concepts": Concept {
+        define "%s": Concept {
             %s
         }
 '''
@@ -200,6 +200,10 @@ cql_without_relationship_template = """
 # Code '49498-9' from "LOINC"
 
 # +
+
+cql_retrieval = '''\n        define "{}": [{}: Code in "{}"]'''
+
+cql_event_return = '''\n        define "Event{}" E return E.{}'''
 
 cql_result_template = '''
        define "{}": 
@@ -453,7 +457,47 @@ def parse_questions_from_feature_csv(folder_prefix='',
     with open(filename, 'w') as f:
             f.write(output_nlpql)
 
+def cql_from_json(input_json):
+    cql_statements = ''
+    with open(input_json) as f:
+        data = json.load(f)
+        
+    # Generates Concept statements
+    for concept in data['concepts']:
+        name = concept['name']
+        codelist = concept['codeset']['codelist']
+        codesystem = concept['codeset']['system']
+        cql_statements += cql_convert_to_concept_statement(name, codelist, codesystem, '')
+    
+    # Generates Event Statement
+    event_statement = cql_retrieval.format(data['event']['name'], data['event']['fhirResource'], 'myConcept')
+    cql_statements += event_statement
+    event_return = cql_event_return.format(data['event']['returnField'], data['event']['returnField'].lower()+data['event']['returnType'])
+    cql_statements += event_return
+    
+    
+    filename = 'cql/{}.cql'.format(data['type'])
+    cql_final = cql_template_header.format(data['type']) + cql_statements
+    with open(filename, 'w') as f:
+        f.write(cql_final)
+
 if __name__ == "__main__":
-    parse_questions_from_feature_csv(folder_prefix = '',
-                                     form_name =  'testcsv',
-                                     description = 'Test Definition')
+    #parse_questions_from_feature_csv(folder_prefix = '', form_name =  'testcsv', description = 'Test Definition')
+    cql_from_json('event_inclusion.json')
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
