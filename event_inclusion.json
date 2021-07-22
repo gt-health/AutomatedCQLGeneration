@@ -1,12 +1,15 @@
 {
+    "name": "Syphilis_Medication_Treatment",
     "type": "EventAndInclusion",
     "concepts":[
       {
         "name": "myConcept",
-        "codeset": {
-          "codelist" : ["A56","A57"],
-          "system": "http://loinc.org"
-        }
+        "codesets": [
+            {
+              "codelist" : ["A56","A57"],
+              "system": "http://loinc.org"
+            }
+        ]
       }
     ],
     "event": {
@@ -16,17 +19,21 @@
       "returnField": "Onset",
       "returnType" : "DateTime" 
     },
-    "Inclusion": [
+    "inclusions": [
       {
         "fhirResource": "MedicationStatement",
         "concept": "someconcept",
         "resultType": "Drug",
         "resultAnswer": "20000005",
         "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
-        "filter": "First"
+        "filterType": "First",
+        "timeFrame": {
+            "start": "+ 2 weeks",
+            "end": "+ 4 weeks"
+        }
       }
     ],
-    "return aggregator" :{
+    "returnAggregator" :{
       "type": "union"
     }
 }
