@@ -285,7 +285,7 @@ def cql_from_json(input_json):
 
 def cql_from_json_with_entities(input_json):
     
-    # Written to support creating CQL from a prespecified JSON file
+    # Written to support creating CQL from a pre-specified JSON file
     
     entityLibrary = {}
     
@@ -295,12 +295,13 @@ def cql_from_json_with_entities(input_json):
     scriptType = data['type']
     if scriptType == 'EventAndInclusion':
         script = EventAndInclusionScript(data)
-    print(script)
+    #print(script)
     
     return STU3Generator.generate(script)
 
 if __name__ == "__main__":
-    #parse_questions_from_feature_csv(folder_prefix = '', form_name =  'testcsv', description = 'Test Definition')
+
+    # parse_questions_from_feature_csv(folder_prefix = '', form_name =  'testcsv', description = 'Test Definition')
     with open('output_file.cql', 'w+') as f:
         f.write(cql_from_json_with_entities('event_inclusion.json'))
     

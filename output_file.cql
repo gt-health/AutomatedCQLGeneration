@@ -9,3 +9,6 @@ define "myConcept": Concept {
     Code A56 from LOINC,
 	Code A57 from LOINC
 }
+
+define "Syphilis_Condition": [Condition: Code in "myConcept"]
+define "EventReturn" E return E.onsetDateTime

@@ -13,7 +13,9 @@ class STU3Generator:
         header = STU3Templates.cql_header.format(script.name)
         codesystems = STU3Generator.generateCodesystems(script.concepts)
         concepts = STU3Generator.generateConcepts(script.concepts)
-        output = '\n'.join([header, codesystems, concepts])
+        event = STU3Generator.generateEvent(script.event)
+        inclusions = STU3Generator.generateInclusions(script.inclusions)
+        output = '\n'.join([header, codesystems, concepts, event])
         return output
 
     
@@ -55,5 +57,14 @@ class STU3Generator:
         else:
             return codesystem
         
-        
-    def generateEvent:
+    def generateEvent(event):
+        event_cql = STU3Templates.cql_event.format(event.name, event.fhirResource, event.concept)
+        event_return_field = ''.join([event.returnField.lower(),event.returnType])
+        event_return = STU3Templates.cql_event_return.format(event_return_field)
+        event_output = '\n'.join([event_cql, event_return])
+        return event_output
+
+    def generateInclusions(inclusions):
+        for inclusion in inclusions:
+            inclusion_cql =
+        return output

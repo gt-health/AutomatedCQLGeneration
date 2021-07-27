@@ -17,6 +17,10 @@ codesystems_map = {'http://loinc.org': 'LOINC' ,
 cql_codesystem = '''codesystem "{}":'{}'
 '''
 
+cql_event = '''define "{}": [{}: Code in "{}"]'''
+
+cql_event_return = '''define "EventReturn" E return E.{}'''
+
 basic_data_entity_template = '''
 define final {}:
     {}
@@ -106,8 +110,6 @@ cql_without_relationship_template = """
 # +
 
 cql_retrieval = '''\n        define "{}": [{}: Code in "{}"]'''
-
-cql_event_return = '''\n        define "Event{}" E return E.{}'''
 
 cql_result_template = '''
        define "{}": 

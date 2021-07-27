@@ -99,6 +99,7 @@ class CodesetEntity(BaseEntity):
 class EventEntity(SimpleRetrievalEntity):
     def __init__(self, data):
         self.entityType = "EventEntity"
+        self.name = data['name']
         self.fhirResource = data['fhirResource']
         self.concept = data['concept']
         self.returnField = data['returnField']
