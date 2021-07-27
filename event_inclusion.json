@@ -21,10 +21,13 @@
     },
     "inclusions": [
       {
+        #Add a name to the inclusion definition
+        "name": "Penicillin_MS",
         "fhirResource": "MedicationStatement",
         "concept": "someconcept",
         "resultType": "Drug",
-        "resultAnswer": "20000005",
+        "questionConcept": "20000005", #Change to Question Concept, resultAnswer is something else.
+        "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G",
         "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
         "filterType": "First",
         "timeFrame": {
