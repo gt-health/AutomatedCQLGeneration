@@ -108,19 +108,26 @@ class EventEntity(SimpleRetrievalEntity):
 class InclusionEntity(BaseEntity):
     def __init__(self, data):
         self.entityType = "InclusionEntity"
+        self.name = data['name']
         self.fhirResource = data['fhirResource']
         self.concept = data['concept']
         self.resultType = data['resultType']
-        self.resultAnswer = data['resultAnswer']
+        self.questionConcept = data['questionConcept']
+        self.answerValue = data['answerValue']
         self.sourceValue = data['sourceValue']
         self.filterType = data['filterType']
+        self.timeFrame = TimeFrameEntity(data['timeFrame'])
         
 class AggregateEntity(BaseEntity):
     def __init__(self, data):
         self.entityType = "AggregateEntity"
         self.aggregateType = data['type']
 
-
+class TimeFrameEntity(BaseEntity):
+    def __init__(self, data):
+        self.entityType = "TimeFrameEntity"
+        self.start = data['start']
+        self.end = data['end']
 
 
 

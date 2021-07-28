@@ -23,7 +23,7 @@
       {
         "name": "Penicillin_MS",
         "fhirResource": "MedicationStatement",
-        "concept": "someconcept",
+        "concept": "myConcept",
         "resultType": "Drug",
         "questionConcept": "20000005",
         "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G",

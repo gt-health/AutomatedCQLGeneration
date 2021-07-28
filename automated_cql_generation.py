@@ -5,7 +5,6 @@ import os
 import re
 import string
 from os import path, remove, write
-import dateutil.parser as parser
 
 import requests
 
@@ -300,10 +299,9 @@ def cql_from_json_with_entities(input_json):
     return STU3Generator.generate(script)
 
 if __name__ == "__main__":
-
     # parse_questions_from_feature_csv(folder_prefix = '', form_name =  'testcsv', description = 'Test Definition')
     with open('output_file.cql', 'w+') as f:
-        f.write(cql_from_json_with_entities('event_inclusion.json'))
+        f.write(cql_from_json_with_entities('cql_template_definition/event_inclusion.json'))
     
     
     

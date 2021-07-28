@@ -14,12 +14,31 @@ codesystems_map = {'http://loinc.org': 'LOINC' ,
                    'http://hl7.org/fhir/sid/icd-9-cm': 'ICD9',
                    'http://hl7.org/fhir/sid/icd-10': 'ICD10'}
 
+resource_temporal_map = {'Encounter': 'period.start',
+                         'Condition': 'onsetDateTime',
+                         'Procedure': 'performedDateTime',
+                         'Observation': 'effectiveDateTime',
+                         'MedicationRequest': 'authoredOn',
+                         'MedicationStatement': 'effectiveDateTime'}
+
 cql_codesystem = '''codesystem "{}":'{}'
 '''
 
 cql_event = '''define "{}": [{}: Code in "{}"]'''
 
 cql_event_return = '''define "EventReturn" E return E.{}'''
+
+cql_temporal_start_suffix = '''where target.{} after eventOnset {}'''
+cql_temporal_end_suffix = '''where target.{} before eventOnset {}'''
+cql_temporal_both_suffix = '''where target.{} after eventOnset {} and target.{} before eventOnset {}'''
+
+cql_temporal_datetime_start_suffix = '''where target.{} after {}'''
+cql_temporal_datetime_end_suffix = '''where target.{} before {}'''
+cql_temporal_interval_suffix = '''where target.{} during Interval[@{}, @{}]'''
+
+cql_filter = '''define "{}": {}({})'''
+
+cql_shaping = '''define "{}Tuple": from {} target\n\treturn Tuple {{ questionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}',\n\t\tdateTime: (target.{} as FHIR.period).start.value}}'''
 
 basic_data_entity_template = '''
 define final {}:

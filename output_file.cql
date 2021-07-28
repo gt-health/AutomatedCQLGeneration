@@ -12,3 +12,12 @@ define "myConcept": Concept {
 
 define "Syphilis_Condition": [Condition: Code in "myConcept"]
 define "EventReturn" E return E.onsetDateTime
+define "Penicillin_MS": [MedicationStatement: Code in "myConcept"] target
+	where target.effectiveDateTime after eventOnset + 2 weeks and target.effectiveDateTime before eventOnset + 4 weeks
+define "FirstPenicillin_MS": First(Penicillin_MS)
+define "Penicillin_MSTuple": from Penicillin_MS target
+	return Tuple { questionConcept: '20000005',
+		sourceValue: target.medication.coding[0].code+'^'+target.medication.coding[0].system, 
+		answerValue: 'http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G',
+		resultType: 'Drug',
+		dateTime: (target.effectiveDateTime as FHIR.period).start.value}
