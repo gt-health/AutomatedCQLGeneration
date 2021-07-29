@@ -9,7 +9,7 @@ context Patient
 
 codesystems_map = {'http://loinc.org': 'LOINC' ,
                    'http://snomed.info/sct': 'SNOMED',
-                   'http://www.nlm.nih.gov/research/umls/rxnorm': 'RxNorm',
+                   'http://www.nlm.nih.gov/research/umls/rxnorm': 'RXNORM',
                    'http://www.ama-assn.org/go/cpt': 'CPT',
                    'http://hl7.org/fhir/sid/icd-9-cm': 'ICD9',
                    'http://hl7.org/fhir/sid/icd-10': 'ICD10'}
@@ -21,16 +21,16 @@ resource_temporal_map = {'Encounter': 'period.start',
                          'MedicationRequest': 'authoredOn',
                          'MedicationStatement': 'effectiveDateTime'}
 
-cql_codesystem = '''codesystem "{}":'{}'
+cql_codesystem = '''codesystem "{}": '{}'
 '''
 
 cql_event = '''define "{}": [{}: Code in "{}"]'''
 
 cql_event_return = '''define "EventReturn" E return E.{}'''
 
-cql_temporal_start_suffix = '''where target.{} after eventOnset {}'''
-cql_temporal_end_suffix = '''where target.{} before eventOnset {}'''
-cql_temporal_both_suffix = '''where target.{} after eventOnset {} and target.{} before eventOnset {}'''
+cql_temporal_start_suffix = '''where target.{} after "EventReturn" {}'''
+cql_temporal_end_suffix = '''where target.{} before "EventReturn" {}'''
+cql_temporal_both_suffix = '''where target.{} after "EventReturn" {} and target.{} before "EventReturn" {}'''
 
 cql_temporal_datetime_start_suffix = '''where target.{} after {}'''
 cql_temporal_datetime_end_suffix = '''where target.{} before {}'''
@@ -67,7 +67,7 @@ cql_template = '''
         codesystem "CPT": 'http://www.ama-assn.org/go/cpt'
         codesystem "ICD9": 'urn:oid:2.16.840.1.113883.6.42'
         codesystem "ICD10": 'urn:oid:2.16.840.1.113883.6.3'
-        codesystem USCoreEthnicitySystem: 'urn:oid:2.16.840.1.113883.6.238' 
+        codesystem USCoreEthnicitySystem: 'urn:oid:2.16.840.1.113883.6.238'
         codesystem RelationshipType: 'urn:oid:2.16.840.1.113883.4.642.3.449'
 
         {}
@@ -79,12 +79,9 @@ cql_template = '''
 '''
 
 # +
-cql_concept_code_template = '''Code {} from {}'''
+cql_concept_code_template = '''Code '{}' from {}'''
 
-cql_concept_template = '''define "{}": Concept {{
-    {}
-}}
-'''
+cql_concept_template = '''define "{}": Concept {{\n\t{}\n}}'''
 
 
 cql_filter_where_in_clause_template =  '''
@@ -131,7 +128,7 @@ cql_without_relationship_template = """
 cql_retrieval = '''\n        define "{}": [{}: Code in "{}"]'''
 
 cql_result_template = '''
-       define "{}": 
+       define "{}":
             {}
 '''
 

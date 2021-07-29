@@ -3,19 +3,28 @@
     "type": "EventAndInclusion",
     "concepts":[
       {
-        "name": "myConcept",
+        "name": "SyphilisConcept",
         "codesets": [
             {
-              "codelist" : ["A56","A57"],
-              "system": "http://loinc.org"
+              "codelist" : ["76272004","444150000"],
+              "system": "http://snomed.info/sct"
             }
+        ]
+      },
+      {
+        "name": "PenicillinConcept",
+        "codesets": [
+          {
+           "codelist" : ["7984", "7980"] ,
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+          }
         ]
       }
     ],
     "event": {
       "name": "Syphilis_Condition",
       "fhirResource": "Condition",
-      "concept": "myConcept",
+      "concept": "SyphilisConcept",
       "returnField": "Onset",
       "returnType" : "DateTime" 
     },
@@ -23,7 +32,7 @@
       {
         "name": "Penicillin_MS",
         "fhirResource": "MedicationStatement",
-        "concept": "myConcept",
+        "concept": "PenicillinConcept",
         "resultType": "Drug",
         "questionConcept": "20000005",
         "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G",

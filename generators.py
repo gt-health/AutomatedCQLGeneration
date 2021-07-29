@@ -5,11 +5,11 @@ import STU3Templates
 import dateutil.parser as parser
 
 class STU3Generator:
-    
+
     def generate(script):
         if script.scriptType == 'EventAndInclusionScript':
             return STU3Generator.generateEventAndInclusion(script)
-    
+
     def generateEventAndInclusion(script):
         header = STU3Templates.cql_header.format(script.name)
         codesystems = STU3Generator.generateCodesystems(script.concepts)
@@ -19,45 +19,45 @@ class STU3Generator:
         output = '\n'.join([header, codesystems, concepts, event, inclusions])
         return output
 
-    
+
     def generateCodesystems(concepts):
         unique_codesystems = set()
         for concept in concepts:
             for codeset in concept.codesets:
                 unique_codesystems.add(codeset.system)
-        
+
         codesystems_output = ''
         for codesystem_uri in unique_codesystems:
             common_name = STU3Generator.getCommonCodesystemName(codesystem_uri)
             codesystem_cql = STU3Templates.cql_codesystem.format(common_name, codesystem_uri)
             codesystems_output += codesystem_cql
-        
+
         return codesystems_output
-            
+
     def generateConcepts(concepts):
-        
+
         concepts_cql_list = []
-        
+
         for concept in concepts:
             concept_code_values = []
             for codeset in concept.codesets:
                 codesystem_common_name = STU3Generator.getCommonCodesystemName(codeset.system)
                 for code in codeset.codelist:
                     concept_code_values.append(STU3Templates.cql_concept_code_template.format(code, codesystem_common_name))
-            
+
             concept_values_block = ',\n\t'.join(concept_code_values)
             concept_cql = STU3Templates.cql_concept_template.format(concept.name, concept_values_block)
             concepts_cql_list.append(concept_cql)
-        
+
         concepts_output = '\n'.join(concepts_cql_list)
         return concepts_output
-        
+
     def getCommonCodesystemName(codesystem):
         if (codesystem in STU3Templates.codesystems_map.keys()):
             return STU3Templates.codesystems_map[codesystem]
         else:
             return codesystem
-        
+
     def generateEvent(event):
         event_cql = STU3Templates.cql_event.format(event.name, event.fhirResource, event.concept)
         event_return_field = ''.join([event.returnField.lower(),event.returnType])
@@ -103,16 +103,16 @@ class STU3Generator:
                     inclusion_cql = '\n\t'.join([event_target, temporal_suffix])
                     inclusions_cql_list.append(inclusion_cql)
 
+            filter_name = inclusion.name
             if inclusion.filterType:
                 filter_name = ''.join([inclusion.filterType, inclusion.name])
                 filter_cql = STU3Templates.cql_filter.format(filter_name, inclusion.filterType, inclusion.name)
                 inclusions_cql_list.append(filter_cql)
 
-            shaping_cql = STU3Templates.cql_shaping.format(inclusion.name, inclusion.name, inclusion.questionConcept,
+            shaping_cql = STU3Templates.cql_shaping.format(filter_name, filter_name, inclusion.questionConcept,
                                                            inclusion.sourceValue, inclusion.answerValue, inclusion.resultType,
                                                            temporal_field)
             inclusions_cql_list.append(shaping_cql)
 
         inclusions_output = '\n'.join(inclusions_cql_list)
         return inclusions_output
-
