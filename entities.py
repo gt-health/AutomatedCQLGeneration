@@ -81,7 +81,7 @@ class EventAndInclusionScript(BaseScript):
         self.concepts = list(map(lambda x: ConceptEntity(x), data['concepts']))
         self.event = EventEntity(data['event'])
         self.inclusions = list(map(lambda x: InclusionEntity(x), data['inclusions']))
-        self.aggregator = AggregateEntity(data['returnAggregator'])
+        self.returnAggregator = AggregateEntity(data['returnAggregator'])
         
         
 class ConceptEntity(BaseEntity):

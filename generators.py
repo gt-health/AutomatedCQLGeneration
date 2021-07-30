@@ -15,10 +15,11 @@ class STU3Generator:
         codesystems = STU3Generator.generateCodesystems(script.concepts)
         concepts = STU3Generator.generateConcepts(script.concepts)
         event = STU3Generator.generateEvent(script.event)
-        inclusions = STU3Generator.generateInclusions(script.inclusions)
+        aggregator = None
+        if script.returnAggregator: aggregator = script.returnAggregator
+        inclusions = STU3Generator.generateInclusions(script.inclusions, aggregator)
         output = '\n'.join([header, codesystems, concepts, event, inclusions])
         return output
-
 
     def generateCodesystems(concepts):
         unique_codesystems = set()
@@ -68,13 +69,14 @@ class STU3Generator:
     def convertToISO(date):
         return parser.parse(date).isoformat()
 
-    def generateInclusions(inclusions):
+    def generateInclusions(inclusions, aggregator):
 
         inclusions_cql_list = []
+        inclusion_names = []
 
         for inclusion in inclusions:
             temporal_field = STU3Templates.resource_temporal_map[inclusion.fhirResource]
-
+            inclusion_names.append(inclusion.name)
             if inclusion.timeFrame:
                 event_cql = STU3Templates.cql_event.format(inclusion.name, inclusion.fhirResource, inclusion.concept)
                 event_target = ' '.join([event_cql, 'target'])
@@ -115,4 +117,13 @@ class STU3Generator:
             inclusions_cql_list.append(shaping_cql)
 
         inclusions_output = '\n'.join(inclusions_cql_list)
-        return inclusions_output
+
+        if aggregator:
+            aggregate_cql_list = []
+            for count, name in enumerate(inclusion_names):
+                if count==0: aggregate_cql_list.append(STU3Templates.cql_aggregator_prefix.format('returnAggregator', name))
+                else: aggregate_cql_list.append(STU3Templates.cql_aggregator_suffix.format(aggregator.aggregateType, name))
+            aggregate_output = ''.join(aggregate_cql_list)
+
+        inclusion_aggregate_output = '\n\n'.join([inclusions_output, aggregate_output])
+        return inclusion_aggregate_output

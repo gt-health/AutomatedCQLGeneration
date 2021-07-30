@@ -19,6 +19,15 @@
             "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
           }
         ]
+      },
+      {
+        "name": "CeftriaxoneConcept",
+        "codesets": [
+          {
+           "codelist" : ["1665021"] ,
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+          }
+        ]
       }
     ],
     "event": {
@@ -36,6 +45,20 @@
         "resultType": "Drug",
         "questionConcept": "20000005",
         "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G",
+        "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
+        "filterType": "First",
+        "timeFrame": {
+            "start": "+ 2 weeks",
+            "end": "+ 4 weeks"
+        }
+      },
+      {
+        "name": "Ceftriaxone_MS",
+        "fhirResource": "MedicationStatement",
+        "concept": "CeftriaxoneConcept",
+        "resultType": "Drug",
+        "questionConcept": "20000005",
+        "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^1665021^ceftriaxone 1000 MG Injection",
         "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
         "filterType": "First",
         "timeFrame": {

@@ -3,8 +3,8 @@ using FHIR version '3.0.0'
 include FHIRHelpers version '3.0.0' called FHIRHelpers
 context Patient
 
-codesystem "SNOMED": 'http://snomed.info/sct'
 codesystem "RXNORM": 'http://www.nlm.nih.gov/research/umls/rxnorm'
+codesystem "SNOMED": 'http://snomed.info/sct'
 
 define "SyphilisConcept": Concept {
 	Code '76272004' from SNOMED,
@@ -13,6 +13,9 @@ define "SyphilisConcept": Concept {
 define "PenicillinConcept": Concept {
 	Code '7984' from RXNORM,
 	Code '7980' from RXNORM
+}
+define "CeftriaxoneConcept": Concept {
+	Code '1665021' from RXNORM
 }
 define "Syphilis_Condition": [Condition: Code in "SyphilisConcept"]
 define "EventReturn" E return E.onsetDateTime
@@ -25,3 +28,15 @@ define "FirstPenicillin_MSTuple": from FirstPenicillin_MS target
 		answerValue: 'http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G',
 		resultType: 'Drug',
 		dateTime: (target.effectiveDateTime as FHIR.period).start.value}
+define "Ceftriaxone_MS": [MedicationStatement: Code in "CeftriaxoneConcept"] target
+	where target.effectiveDateTime after "EventReturn" + 2 weeks and target.effectiveDateTime before "EventReturn" + 4 weeks
+define "FirstCeftriaxone_MS": First(Ceftriaxone_MS)
+define "FirstCeftriaxone_MSTuple": from FirstCeftriaxone_MS target
+	return Tuple { questionConcept: '20000005',
+		sourceValue: target.medication.coding[0].code+'^'+target.medication.coding[0].system, 
+		answerValue: 'http://www.nlm.nih.gov/research/umls/rxnorm^1665021^ceftriaxone 1000 MG Injection',
+		resultType: 'Drug',
+		dateTime: (target.effectiveDateTime as FHIR.period).start.value}
+
+define "returnAggregator":
+	"Penicillin_MS" union "Ceftriaxone_MS" 
