@@ -118,12 +118,16 @@ class STU3Generator:
 
         inclusions_output = '\n'.join(inclusions_cql_list)
 
-        if aggregator:
+        if aggregator and len(inclusion_names)>1:
             aggregate_cql_list = []
             for count, name in enumerate(inclusion_names):
                 if count==0: aggregate_cql_list.append(STU3Templates.cql_aggregator_prefix.format('returnAggregator', name))
                 else: aggregate_cql_list.append(STU3Templates.cql_aggregator_suffix.format(aggregator.aggregateType, name))
             aggregate_output = ''.join(aggregate_cql_list)
+            inclusion_aggregate_output = '\n\n'.join([inclusions_output, aggregate_output])
+            return inclusion_aggregate_output
 
-        inclusion_aggregate_output = '\n\n'.join([inclusions_output, aggregate_output])
-        return inclusion_aggregate_output
+        return inclusions_output
+
+
+
