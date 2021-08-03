@@ -3,6 +3,8 @@
 
 import STU3Templates
 import dateutil.parser as parser
+import requests
+import entities
 
 class STU3Generator:
 
@@ -12,11 +14,15 @@ class STU3Generator:
 
     def generateEventAndInclusion(script):
         header = STU3Templates.cql_header.format(script.name)
-        codesystems = STU3Generator.generateCodesystems(script.concepts)
-        concepts = STU3Generator.generateConcepts(script.concepts)
+        script_concepts = script.concepts
+        if type(script.concepts[0].codesets) == str:
+            script_concepts = STU3Generator.translateFromAtlas(script.concepts)
+        codesystems = STU3Generator.generateCodesystems(script_concepts)
+        concepts = STU3Generator.generateConcepts(script_concepts)
         event = STU3Generator.generateEvent(script.event)
         aggregator = None
-        if script.returnAggregator: aggregator = script.returnAggregator
+        if script.returnAggregator:
+            aggregator = script.returnAggregator
         inclusions = STU3Generator.generateInclusions(script.inclusions, aggregator)
         output = '\n'.join([header, codesystems, concepts, event, inclusions])
         return output
@@ -34,6 +40,31 @@ class STU3Generator:
             codesystems_output += codesystem_cql
 
         return codesystems_output
+
+    def translateFromAtlas(concepts):
+        output_concepts = []
+        #import pdb; pdb.set_trace()
+        for concept in concepts:
+            split_url = concept.codesets.split('#')
+            full_url = 'WebAPI'.join(split_url)
+            if full_url[-10:] != 'expression':
+                full_url = ''.join([full_url, '/expression'])
+            atlas_concepts = requests.get(url = full_url).json()
+            atlas_concept_set = entities.AtlasConceptSetEntity(atlas_concepts)
+            pulled_concepts = {}
+            for atlas_concept in atlas_concept_set.concepts:
+                try: codesystem = list(STU3Templates.codesystems_map.keys())[list(STU3Templates.codesystems_map.values()).index(atlas_concept.VOCABULARY_ID)]
+                except: codesystem = atlas_concept.VOCABULARY_ID
+                pulled_concepts.update(
+                    {atlas_concept.CONCEPT_ID: {'codelist': [atlas_concept.CONCEPT_CODE], 'system': codesystem}})
+            output_concepts_list = []
+
+            for key in pulled_concepts:
+                output_concepts_list.append(pulled_concepts[key])
+            output_json = {'name': concept.name, 'codesets': output_concepts_list}
+            output_concept_entity = entities.ConceptEntity(output_json)
+            output_concepts.append(output_concept_entity)
+        return output_concepts
 
     def generateConcepts(concepts):
 

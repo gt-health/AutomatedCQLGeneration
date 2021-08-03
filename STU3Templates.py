@@ -9,7 +9,7 @@ context Patient
 
 codesystems_map = {'http://loinc.org': 'LOINC' ,
                    'http://snomed.info/sct': 'SNOMED',
-                   'http://www.nlm.nih.gov/research/umls/rxnorm': 'RXNORM',
+                   'http://www.nlm.nih.gov/research/umls/rxnorm': 'RxNorm',
                    'http://www.ama-assn.org/go/cpt': 'CPT',
                    'http://hl7.org/fhir/sid/icd-9-cm': 'ICD9',
                    'http://hl7.org/fhir/sid/icd-10': 'ICD10'}
