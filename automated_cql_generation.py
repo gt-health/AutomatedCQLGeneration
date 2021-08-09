@@ -12,6 +12,7 @@ from entities import *
 
 from generators import *
 
+import argparse
 
 def cleanup_row(r):
     # Turns a row from the csv and turns it into a dictionary
@@ -300,8 +301,19 @@ def cql_from_json_with_entities(input_json):
 
 if __name__ == "__main__":
     # parse_questions_from_feature_csv(folder_prefix = '', form_name =  'testcsv', description = 'Test Definition')
-    with open('event_inclusion.cql', 'w+') as f:
-        f.write(cql_from_json_with_entities('cql_template_definition/event_inclusion.json'))
+    parser = argparse.ArgumentParser(description='Process an input json to create a CQL script.')
+    parser.add_argument('--input', help='the input json')
+    parser.add_argument("--output", help="optional output file name")
+    args = parser.parse_args()
+    input_file = 'input_json.json'
+    if args.input:
+        input_file = args.input
+    output_file = 'output_cql.cql'
+    if args.output:
+        output_file = args.output
+
+    with open(output_file, 'w+') as f:
+        f.write(cql_from_json_with_entities(input_file))
     
     
     
