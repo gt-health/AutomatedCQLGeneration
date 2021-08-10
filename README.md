@@ -159,3 +159,10 @@ Each Inclusion consists of
 * A ``sourceValue`` for the shaped tuple. This is the retrieved value from the object to be used. references to the current object must be stated as ``target``
 * A ``filterType``, which describes how to filter the results to a singular object, values include ``First,Last``
 * A ``timeFrame`` object, with the fields ``start`` and ``end``, describe a time period **in terms of the original event** where the inclusion must be valid.
+
+# Running the Automated CQL Generation tool
+The tool can be run via a simple command line interface (CLI). To ensure that it can be run, Python 3.x needs to be installed on your computer. 
+
+1. In Terminal/Command Prompt, navigate to the directory where this repo has been placed
+2. Run the command ```pip install -r requirements.txt``` to install the required packages for this tool
+3. Run ```python3 automated_cql_generation.py --input --output``` where --input is the optional flag for naming the location of an input JSON (default is input_json.json in the current directory) and --output is the optional flag for naming the output CQL file (default is the name of the input file in a subdirectory named cql). You can run ```python3 automated_cql_generation.py -h``` at any time to see the descriptions for each of the optional parameters again
