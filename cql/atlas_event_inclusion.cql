@@ -3,8 +3,8 @@ using FHIR version '3.0.0'
 include FHIRHelpers version '3.0.0' called FHIRHelpers
 context Patient
 
-codesystem "SNOMED": 'http://snomed.info/sct'
 codesystem "RxNorm": 'http://www.nlm.nih.gov/research/umls/rxnorm'
+codesystem "SNOMED": 'http://snomed.info/sct'
 
 define "SyphilisConcept": Concept {
 	Code '76272004' from SNOMED,

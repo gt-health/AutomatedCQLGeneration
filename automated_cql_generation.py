@@ -303,14 +303,14 @@ if __name__ == "__main__":
     # parse_questions_from_feature_csv(folder_prefix = '', form_name =  'testcsv', description = 'Test Definition')
     
     parser = argparse.ArgumentParser(description='Process an input json to create a CQL script.')
-    parser.add_argument('--input', help='the input json')
-    parser.add_argument("--output", help="optional output file name")
+    parser.add_argument('--input', help='optional input json, assumes file name of input_json.json')
+    parser.add_argument("--output", help="optional output file name, assumes same name as input")
     args = parser.parse_args()
     input_file = 'input_json.json'
     if args.input:
         input_file = args.input
-    input_split = input_file.split('.')
-    output_file = ''.join([input_split[0],'.cql'])
+    input_split = re.split('/|\.', input_file)
+    output_file = ''.join(['cql/', input_split[-2],'.cql'])
     if args.output:
         output_file = args.output
 
