@@ -309,7 +309,8 @@ if __name__ == "__main__":
     input_file = 'input_json.json'
     if args.input:
         input_file = args.input
-    output_file = 'output_cql.cql'
+    input_split = input_file.split('.')
+    output_file = ''.join([input_split[0],'.cql'])
     if args.output:
         output_file = args.output
 
