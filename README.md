@@ -3,7 +3,7 @@ This is a quick guide for working with the Automated CQL Generation Tool. This t
 * Reads a .json file as configuration
 * Generates CQL snippets based on the configuration
 * Writes the final CQL script to a file of the same name
-The guide will first give a basic overview of json as a structure, then the supported 
+The guide will first give a basic overview of json as a structure, then the supported JSON definitions.
 
 # JSON Overview
 ## External Tutorials
