@@ -88,7 +88,8 @@ class ConceptEntity(BaseEntity):
     def __init__(self, data):
         self.entityType = 'ConceptEntity'
         self.name = data['name']
-        self.codesets = list(map(lambda x: CodesetEntity(x), data['codesets']))
+        if type(data['codesets']) == str: self.codesets = data['codesets']
+        else: self.codesets = list(map(lambda x: CodesetEntity(x), data['codesets']))
         
 class CodesetEntity(BaseEntity):
     def __init__(self, data):
@@ -129,11 +130,23 @@ class TimeFrameEntity(BaseEntity):
         self.start = data['start']
         self.end = data['end']
 
+class AtlasConceptSetEntity(BaseEntity):
+    def __init__(self, data):
+        self.entityType = 'AtlasConceptSetEntity'
+        self.concepts = list(map(lambda x: AtlasConceptEntity(x), data['items']))
 
-
-
-
-
-
+class AtlasConceptEntity(BaseEntity):
+    def __init__(self, data):
+        self.entityType = 'AtlasConceptEntity'
+        self.CONCEPT_ID = data['concept']['CONCEPT_ID']
+        self.CONCEPT_NAME = data['concept']['CONCEPT_NAME']
+        self.STANDARD_CONCEPT = data['concept']['STANDARD_CONCEPT']
+        self.STANDARD_CONCEPT_CAPTION = data['concept']['STANDARD_CONCEPT_CAPTION']
+        self.INVALID_REASON = data['concept']['INVALID_REASON']
+        self.INVALID_REASON_CAPTION = data['concept']['INVALID_REASON_CAPTION']
+        self.CONCEPT_CODE = data['concept']['CONCEPT_CODE']
+        self.DOMAIN_ID = data['concept']['DOMAIN_ID']
+        self.VOCABULARY_ID = data['concept']['VOCABULARY_ID']
+        self.CONCEPT_CLASS_ID = data['concept']['CONCEPT_CLASS_ID']
 
 

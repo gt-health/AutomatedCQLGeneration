@@ -301,6 +301,7 @@ def cql_from_json_with_entities(input_json):
 
 if __name__ == "__main__":
     # parse_questions_from_feature_csv(folder_prefix = '', form_name =  'testcsv', description = 'Test Definition')
+    
     parser = argparse.ArgumentParser(description='Process an input json to create a CQL script.')
     parser.add_argument('--input', help='the input json')
     parser.add_argument("--output", help="optional output file name")
@@ -314,6 +315,7 @@ if __name__ == "__main__":
 
     with open(output_file, 'w+') as f:
         f.write(cql_from_json_with_entities(input_file))
+
     
     
     
