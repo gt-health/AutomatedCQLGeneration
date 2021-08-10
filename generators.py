@@ -14,11 +14,16 @@ class STU3Generator:
 
     def generateEventAndInclusion(script):
         header = STU3Templates.cql_header.format(script.name)
-        script_concepts = script.concepts
-        if type(script.concepts[0].codesets) == str:
-            script_concepts = STU3Generator.translateFromAtlas(script.concepts)
-        codesystems = STU3Generator.generateCodesystems(script_concepts)
-        concepts = STU3Generator.generateConcepts(script_concepts)
+        script_concepts = []
+        atlas_concepts = []
+        for concept in script.concepts:
+            if type(concept.codesets) == str:
+                atlas_concepts.append(concept)
+            else:
+                script_concepts.append(concept)
+        script_concepts.append(STU3Generator.translateFromAtlas(atlas_concepts))
+        codesystems = STU3Generator.generateCodesystems(script_concepts[0])
+        concepts = STU3Generator.generateConcepts(script_concepts[0])
         event = STU3Generator.generateEvent(script.event)
         aggregator = None
         if script.returnAggregator:
