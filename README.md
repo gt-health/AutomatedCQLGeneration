@@ -60,7 +60,7 @@ EventAndInclusion json files consist of 3 fields
 * A single **event**
 * A list of **inclusions**
 * A single **Aggregator**
-### EventAndInclusion Concepts
+## EventAndInclusion Concepts
 The concept section defines the concepts to be referenced further in the template.
 ```
 "concepts": [
