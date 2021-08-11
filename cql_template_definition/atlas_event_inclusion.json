@@ -38,6 +38,34 @@
         }
       },
       {
+        "name": "Penicillin_MR",
+        "fhirResource": "MedicationRequest",
+        "concept": "PenicillinConcept",
+        "resultType": "Drug",
+        "questionConcept": "20000005",
+        "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G",
+        "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
+        "filterType": "First",
+        "timeFrame": {
+            "start": "+ 2 weeks",
+            "end": "+ 4 weeks"
+        }
+      },
+      {
+        "name": "Ceftriaxone_MR",
+        "fhirResource": "MedicationRequest",
+        "concept": "CeftriaxoneConcept",
+        "resultType": "Drug",
+        "questionConcept": "20000005",
+        "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^1665021^ceftriaxone 1000 MG Injection",
+        "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
+        "filterType": "First",
+        "timeFrame": {
+            "start": "+ 2 weeks",
+            "end": "+ 4 weeks"
+        }
+      },
+      {
         "name": "Ceftriaxone_MS",
         "fhirResource": "MedicationStatement",
         "concept": "CeftriaxoneConcept",
@@ -52,6 +80,152 @@
         }
       }
     ],
+  "deriveds": [
+    {
+      "name": "Penicillin_MS_Dose",
+      "baseDefinition": "Penicillin_MS",
+      "fhirField": "dosage.doseAndRate.doseQuantity.value",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "target.dosage.doseAndRate.doseQuantity.value",
+      "sourceValue": "target.dosage.doseAndRate.doseQuantity.value"
+    },
+    {
+      "name": "Penicillin_MS_Dosage_Unit",
+      "baseDefinition": "Penicillin_MS",
+      "fhirField": "dosage.doseAndRate.doseQuantity.unit",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "target.dosage.doseAndRate.doseQuantity.unit",
+      "sourceValue": "target.dosage.doseAndRate.doseQuantity.unit"
+    },
+    {
+      "name": "Penicillin_MR_Date_Treatment_Prescribed",
+      "baseDefinition": "Penicillin_MR",
+      "fhirField": "authoredOn",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "target.authoredOn",
+      "sourceValue": "target.authoredOn"
+    },
+    {
+      "name": "Penicillin_MS_Date_Medication_Started",
+      "baseDefinition": "Penicillin_MS",
+      "fhirField": "effectiveDateTime",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "target.effectiveDateTime",
+      "sourceValue": "target.effectiveDateTime"
+    },
+    {
+      "name": "Penicillin_MS_Date_Medication_Route",
+      "baseDefinition": "Penicillin_MS",
+      "fhirField": "dosage.route",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "dosage.route.coding[0].code+'^'+dosage.route.coding[0].system",
+      "sourceValue": "dosage.route.coding[0].code+'^'+dosage.route.coding[0].system"
+    },
+    {
+      "name": "Penicillin_MS_Date_Medication_Frequency",
+      "baseDefinition": "Penicillin_MS",
+      "fhirField": "dosage.timing",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "dosage.timing.repeat.frequency",
+      "sourceValue": "dosage.timing.repeat.frequency"
+    },
+    {
+      "name": "Penicillin_MS_Date_Medication_Frequency_Unit",
+      "baseDefinition": "Penicillin_MS",
+      "fhirField": "dosage.timing",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "dosage.timing.repeat.period+' '+dosage.timing.repeat.periodUnit",
+      "sourceValue": "dosage.timing.repeat.period+' '+dosage.timing.repeat.periodUnit"
+    },
+    {
+      "name": "Penicillin_MS_Date_Medication_Frequency_Duration",
+      "baseDefinition": "Penicillin_MS",
+      "fhirField": "dosage.timing",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "dosage.timing.repeat.duration+' '+dosage.timing.repeat.durationUnit",
+      "sourceValue": "dosage.timing.repeat.duration+' '+dosage.timing.repeat.durationUnit"
+    },
+    {
+      "name": "Ceftriaxone_MS_Dose",
+      "baseDefinition": "Ceftriaxone_MS",
+      "fhirField": "dosage.doseAndRate.doseQuantity.value",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "target.dosage.doseAndRate.doseQuantity.value",
+      "sourceValue": "target.dosage.doseAndRate.doseQuantity.value"
+    },
+    {
+      "name": "Ceftriaxone_MS_Dosage_Unit",
+      "baseDefinition": "Ceftriaxone_MS",
+      "fhirField": "dosage.doseAndRate.doseQuantity.unit",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "target.dosage.doseAndRate.doseQuantity.unit",
+      "sourceValue": "target.dosage.doseAndRate.doseQuantity.unit"
+    },
+    {
+      "name": "Ceftriaxone_MR_Date_Treatment_Prescribed",
+      "baseDefinition": "Ceftriaxone_MR",
+      "fhirField": "authoredOn",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "target.authoredOn",
+      "sourceValue": "target.authoredOn"
+    },
+    {
+      "name": "Ceftriaxone_MS_Date_Medication_Started",
+      "baseDefinition": "Ceftriaxone_MS",
+      "fhirField": "effectiveDateTime",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "target.effectiveDateTime",
+      "sourceValue": "target.effectiveDateTime"
+    },
+    {
+      "name": "Ceftriaxone_MS_Date_Medication_Route",
+      "baseDefinition": "Ceftriaxone_MS",
+      "fhirField": "dosage.route",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "dosage.route.coding[0].code+'^'+dosage.route.coding[0].system",
+      "sourceValue": "dosage.route.coding[0].code+'^'+dosage.route.coding[0].system"
+    },
+    {
+      "name": "Ceftriaxone_MS_Date_Medication_Frequency",
+      "baseDefinition": "Ceftriaxone_MS",
+      "fhirField": "dosage.timing",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "dosage.timing.repeat.frequency",
+      "sourceValue": "dosage.timing.repeat.frequency"
+    },
+    {
+      "name": "Ceftriaxone_MS_Date_Medication_Frequency_Unit",
+      "baseDefinition": "Ceftriaxone_MS",
+      "fhirField": "dosage.timing",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "dosage.timing.repeat.period+' '+dosage.timing.repeat.periodUnit",
+      "sourceValue": "dosage.timing.repeat.period+' '+dosage.timing.repeat.periodUnit"
+    },
+    {
+      "name": "Ceftriaxone_MS_Date_Medication_Frequency_Duration",
+      "baseDefinition": "Ceftriaxone_MS",
+      "fhirField": "dosage.timing",
+      "resultType": "Drug",
+      "questionConcept": "20000005",
+      "answerValue": "dosage.timing.repeat.duration+' '+dosage.timing.repeat.durationUnit",
+      "sourceValue": "dosage.timing.repeat.duration+' '+dosage.timing.repeat.durationUnit"
+    }
+  ],
     "returnAggregator" :{
       "type": "union"
     }

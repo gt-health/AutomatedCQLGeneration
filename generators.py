@@ -7,15 +7,16 @@ import requests
 import entities
 
 class STU3Generator:
-
+    baseNameToFinalNameMap = {}
     def generate(script):
         if script.scriptType == 'EventAndInclusionScript':
             return STU3Generator.generateEventAndInclusion(script)
 
     def generateEventAndInclusion(script):
-        header = STU3Templates.cql_header.format(script.name)
+        STU3Generator.baseNameToFinalNameMap = {}
         script_concepts = []
         atlas_concepts = []
+        header = STU3Templates.cql_header.format(script.name)
         for concept in script.concepts:
             if type(concept.codesets) == str:
                 atlas_concepts.append(concept)
@@ -25,11 +26,13 @@ class STU3Generator:
         codesystems = STU3Generator.generateCodesystems(script_concepts[0])
         concepts = STU3Generator.generateConcepts(script_concepts[0])
         event = STU3Generator.generateEvent(script.event)
-        aggregator = None
+        aggregatorEntity = None
         if script.returnAggregator:
-            aggregator = script.returnAggregator
-        inclusions = STU3Generator.generateInclusions(script.inclusions, aggregator)
-        output = '\n'.join([header, codesystems, concepts, event, inclusions])
+            aggregatorEntity = script.returnAggregator
+        inclusions, inclusion_names = STU3Generator.generateInclusions(script.inclusions, aggregatorEntity)
+        deriveds = STU3Generator.generateDervied(script.deriveds)
+        aggregator = STU3Generator.generateAggregator(inclusion_names, aggregatorEntity)
+        output = '\n'.join([header, codesystems, concepts, event, inclusions, deriveds, aggregator])
         return output
 
     def generateCodesystems(concepts):
@@ -48,7 +51,6 @@ class STU3Generator:
 
     def translateFromAtlas(concepts):
         output_concepts = []
-        #import pdb; pdb.set_trace()
         for concept in concepts:
             split_url = concept.codesets.split('#')
             full_url = 'WebAPI'.join(split_url)
@@ -146,6 +148,7 @@ class STU3Generator:
                 filter_name = ''.join([inclusion.filterType, inclusion.name])
                 filter_cql = STU3Templates.cql_filter.format(filter_name, inclusion.filterType, inclusion.name)
                 inclusions_cql_list.append(filter_cql)
+                STU3Generator.baseNameToFinalNameMap[inclusion.name] = filter_name
 
             shaping_cql = STU3Templates.cql_shaping.format(filter_name, filter_name, inclusion.questionConcept,
                                                            inclusion.sourceValue, inclusion.answerValue, inclusion.resultType,
@@ -153,17 +156,28 @@ class STU3Generator:
             inclusions_cql_list.append(shaping_cql)
 
         inclusions_output = '\n'.join(inclusions_cql_list)
+        return inclusions_output, inclusion_names
 
+    def generateDervied(deriveds):
+        deriveds_cql_list = []
+        for derived in deriveds:
+            baseFinalName = STU3Generator.baseNameToFinalNameMap[derived.baseDefinition]
+            derived_cql = STU3Templates.cql_shaping_derived.format(derived.name, baseFinalName,
+                                                                   derived.questionConcept, derived.sourceValue,
+                                                                   derived.answerValue, derived.resultType,
+                                                                   derived.fhirField)
+            deriveds_cql_list.append(derived_cql)
+        derived_output = '\n'.join(deriveds_cql_list)
+        return derived_output
+
+    def generateAggregator(inclusion_names, aggregator):
         if aggregator and len(inclusion_names)>1:
             aggregate_cql_list = []
             for count, name in enumerate(inclusion_names):
                 if count==0: aggregate_cql_list.append(STU3Templates.cql_aggregator_prefix.format('returnAggregator', name))
                 else: aggregate_cql_list.append(STU3Templates.cql_aggregator_suffix.format(aggregator.aggregateType, name))
             aggregate_output = ''.join(aggregate_cql_list)
-            inclusion_aggregate_output = '\n\n'.join([inclusions_output, aggregate_output])
-            return inclusion_aggregate_output
-
-        return inclusions_output
+            return aggregate_output
 
 
 

@@ -16,8 +16,18 @@ class BaseScript:
         print('Trying to print script of type ', self.scriptType)
         return str(vars(self))
 
+class ShapedEntity(BaseEntity):
+    def __init__(self, data):
+        super().__init__()
+        self.entityType = 'ShapedEntity'
+        self.resultType = data['resultType']
+        self.questionConcept = data['questionConcept']
+        self.answerValue = data['answerValue']
+        self.sourceValue = data['sourceValue']
+
 class SimpleRetrievalEntity(BaseEntity):
     def __init__(self, group, fhir_resource, code_system, codes, valueset_oid):
+        super().__init__()
         self.entityType = "SimpleRetrievalEntity"
         self.group = group
         self.fhir_resource = fhir_resource
@@ -81,11 +91,13 @@ class EventAndInclusionScript(BaseScript):
         self.concepts = list(map(lambda x: ConceptEntity(x), data['concepts']))
         self.event = EventEntity(data['event'])
         self.inclusions = list(map(lambda x: InclusionEntity(x), data['inclusions']))
+        self.deriveds = list(map(lambda x: DerivedEntity(x), data['deriveds']))
         self.returnAggregator = AggregateEntity(data['returnAggregator'])
         
         
 class ConceptEntity(BaseEntity):
     def __init__(self, data):
+        super().__init__()
         self.entityType = 'ConceptEntity'
         self.name = data['name']
         if type(data['codesets']) == str: self.codesets = data['codesets']
@@ -93,6 +105,7 @@ class ConceptEntity(BaseEntity):
         
 class CodesetEntity(BaseEntity):
     def __init__(self, data):
+        super().__init__()
         self.entityType = 'CodesetEntity'
         self.codelist = data['codelist']
         self.system = data['system']
@@ -106,37 +119,45 @@ class EventEntity(SimpleRetrievalEntity):
         self.returnField = data['returnField']
         self.returnType = data['returnType']
         
-class InclusionEntity(BaseEntity):
+class InclusionEntity(ShapedEntity):
     def __init__(self, data):
+        super().__init__(data)
         self.entityType = "InclusionEntity"
         self.name = data['name']
         self.fhirResource = data['fhirResource']
         self.concept = data['concept']
-        self.resultType = data['resultType']
-        self.questionConcept = data['questionConcept']
-        self.answerValue = data['answerValue']
-        self.sourceValue = data['sourceValue']
         self.filterType = data['filterType']
         self.timeFrame = TimeFrameEntity(data['timeFrame'])
-        
+
+class DerivedEntity(ShapedEntity):
+    def __init__(self, data):
+        super().__init__(data)
+        self.baseDefinition = data['baseDefinition']
+        self.name = data['name']
+        self.fhirField = data['fhirField']
+
 class AggregateEntity(BaseEntity):
     def __init__(self, data):
+        super().__init__()
         self.entityType = "AggregateEntity"
         self.aggregateType = data['type']
 
 class TimeFrameEntity(BaseEntity):
     def __init__(self, data):
+        super().__init__()
         self.entityType = "TimeFrameEntity"
         self.start = data['start']
         self.end = data['end']
 
 class AtlasConceptSetEntity(BaseEntity):
     def __init__(self, data):
+        super().__init__()
         self.entityType = 'AtlasConceptSetEntity'
         self.concepts = list(map(lambda x: AtlasConceptEntity(x), data['items']))
 
 class AtlasConceptEntity(BaseEntity):
     def __init__(self, data):
+        super().__init__()
         self.entityType = 'AtlasConceptEntity'
         self.CONCEPT_ID = data['concept']['CONCEPT_ID']
         self.CONCEPT_NAME = data['concept']['CONCEPT_NAME']
@@ -148,5 +169,3 @@ class AtlasConceptEntity(BaseEntity):
         self.DOMAIN_ID = data['concept']['DOMAIN_ID']
         self.VOCABULARY_ID = data['concept']['VOCABULARY_ID']
         self.CONCEPT_CLASS_ID = data['concept']['CONCEPT_CLASS_ID']
-
-
