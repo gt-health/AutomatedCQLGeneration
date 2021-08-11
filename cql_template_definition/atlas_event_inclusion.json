@@ -4,7 +4,7 @@
     "concepts":[
       {
         "name": "SyphilisConcept",
-        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868958/expression"
+        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868973/expression"
       },
       {
         "name": "PenicillinConcept",
