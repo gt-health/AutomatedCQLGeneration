@@ -38,7 +38,8 @@ cql_temporal_interval_suffix = '''where target.{} during Interval[@{}, @{}]'''
 
 cql_filter = '''define "{}": {}({})'''
 
-cql_shaping = '''define "{}Tuple": from {} target\n\treturn Tuple {{ questionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}',\n\t\tdateTime: (target.{} as FHIR.period).start.value}}'''
+cql_shaping = '''define "{}Tuple": from {} target\n\treturn Tuple {{ questionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}'\n}}'''
+cql_shaping_derived = '''define "{}Tuple": from {} target\n\treturn Tuple {{ questionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}',\n\t\tfield: target.{}\n}}'''
 
 cql_aggregator_prefix = '''define "{}":\n\t"{}" '''
 cql_aggregator_suffix = '''{} "{}" '''
