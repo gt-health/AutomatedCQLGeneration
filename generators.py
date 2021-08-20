@@ -100,7 +100,7 @@ class STU3Generator:
     def generateEvent(event):
         event_cql = STU3Templates.cql_event.format(event.name, event.fhirResource, event.concept)
         event_return_field = ''.join([event.returnField.lower(),event.returnType])
-        event_return = STU3Templates.cql_event_return.format(event_return_field)
+        event_return = STU3Templates.cql_event_return.format(event.name,event_return_field)
         event_output = '\n'.join([event_cql, event_return])
         return event_output
 
@@ -179,5 +179,15 @@ class STU3Generator:
             aggregate_output = ''.join(aggregate_cql_list)
             return aggregate_output
 
+    def handleChoice(choice_field_name):
+        choice_types = STU3Templates.fhir_choice_fields_map[choice_field_name]
+        choice_texts = []
+        for choice_type in choice_types:
+            choice_text = STU3Generator.generateChoiceOptionHandler(choice_field_name,choice_type)
+            choice_texts.append(choice_text)
+        return '\n'.join(choice_texts)
 
 
+    def generateChoiceOptionHandler(input_field_name,choice_type):
+        #STU3Template.${choice_type}_handler.format(input_field_name)
+        return ''

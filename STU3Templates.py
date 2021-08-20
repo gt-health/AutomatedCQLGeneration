@@ -19,14 +19,30 @@ resource_temporal_map = {'Encounter': 'period.start',
                          'Procedure': 'performedDateTime',
                          'Observation': 'effectiveDateTime',
                          'MedicationRequest': 'authoredOn',
-                         'MedicationStatement': 'effectiveDateTime'}
+                         'MedicationStatement': 'effectiveDateTime'
+                         }
+fhir_choice_fields_map = {
+    'abatement': ['DateTime','Age'],
+    'deceased': ['Boolean','DateTime'],
+    'effective': ['DateTime','Period','Timing','Instant'],
+    'item': ['CodeableConcept',"Reference"],
+    'medication': ['CodeableConcept','Reference'],
+    'multipleBirth': ['Boolean','Reference'],
+    'occurrance': ['DateTime','String'],
+    'onset': ['DateTime','Age','Period','Range','String'],
+    'protocolApplied': ['PositiveInt','String']
+    'reported': ['Boolean','Reference'],
+    'statusReason': ['CodeableConcept','Reference'],
+    'value': ['Quantity','CodeableConcept','String','Boolean','Integer','Ratio','SampledData','Time','DateTime','Period']
+}
+
 
 cql_codesystem = '''codesystem "{}": '{}'
 '''
 
 cql_event = '''define "{}": [{}: Code in "{}"]'''
 
-cql_event_return = '''define "EventReturn" E return E.{}'''
+cql_event_return = '''define "EventReturn" "{}" E return E.{}'''
 
 cql_temporal_start_suffix = '''where target.{} after "EventReturn" {}'''
 cql_temporal_end_suffix = '''where target.{} before "EventReturn" {}'''
@@ -38,8 +54,8 @@ cql_temporal_interval_suffix = '''where target.{} during Interval[@{}, @{}]'''
 
 cql_filter = '''define "{}": {}({})'''
 
-cql_shaping = '''define "{}Tuple": from {} target\n\treturn Tuple {{ questionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}'\n}}'''
-cql_shaping_derived = '''define "{}Tuple": from {} target\n\treturn Tuple {{ questionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}',\n\t\tfield: target.{}\n}}'''
+cql_shaping = '''define "{}Tuple": from {} target\n\treturn Tuple {{\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}'\n\t}}'''
+cql_shaping_derived = '''define "{}Tuple": from {} target\n\treturn Tuple {{\n\t\tfhirResourceId: target.id,\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}',\n\t\tfield: target.{}\n\t}}'''
 
 cql_aggregator_prefix = '''define "{}":\n\t"{}" '''
 cql_aggregator_suffix = '''{} "{}" '''
