@@ -20,7 +20,7 @@
       "fhirResource": "Condition",
       "concept": "SyphilisConcept",
       "returnField": "Onset",
-      "returnType" : "DateTime" 
+      "returnType" : "dateTime"
     },
     "inclusions": [
       {
@@ -54,58 +54,49 @@
     ],
   "deriveds": [
     {
-      "name": "Penicillin_MS_Dose",
+      "name": "Penicillin_MS_Dosage",
       "baseDefinition": "Penicillin_MS",
-      "fhirField": "dosage.doseAndRate.doseQuantity.value",
+      "fhirField": "dosage.dose.value",
       "resultType": "Drug",
       "questionConcept": "20000005",
-      "answerValue": "target.dosage.doseAndRate.doseQuantity.value",
-      "sourceValue": "target.dosage.doseAndRate.doseQuantity.value"
-    },
-    {
-      "name": "Penicillin_MS_Dosage_Unit",
-      "baseDefinition": "Penicillin_MS",
-      "fhirField": "dosage.doseAndRate.doseQuantity.unit",
-      "resultType": "Drug",
-      "questionConcept": "20000005",
-      "answerValue": "target.dosage.doseAndRate.doseQuantity.unit",
-      "sourceValue": "target.dosage.doseAndRate.doseQuantity.unit"
+      "answerValue": "target.dosage.dose.value + \" \" + target.dosage.dose.unit",
+      "sourceValue": "target.dosage.dose.value + \" \" + target.dosage.dose.unit"
     },
     {
       "name": "Penicillin_MS_Date_Medication_Started",
       "baseDefinition": "Penicillin_MS",
-      "fhirField": "effectiveDateTime",
+      "fhirField": "effective",
       "resultType": "Drug",
       "questionConcept": "20000005",
-      "answerValue": "target.effectiveDateTime",
-      "sourceValue": "target.effectiveDateTime"
+      "answerValue": "target.effective as FHIR.dateTime",
+      "sourceValue": "target.effective as FHIR.dateTime"
     },
     {
       "name": "Ceftriaxone_MS_Dose",
       "baseDefinition": "Ceftriaxone_MS",
-      "fhirField": "dosage.doseAndRate.doseQuantity.value",
+      "fhirField": "dosage.dose.value",
       "resultType": "Drug",
       "questionConcept": "20000005",
-      "answerValue": "target.dosage.doseAndRate.doseQuantity.value",
-      "sourceValue": "target.dosage.doseAndRate.doseQuantity.value"
+      "answerValue": "target.dosage.dose.value",
+      "sourceValue": "target.dosage.dose.value"
     },
     {
       "name": "Ceftriaxone_MS_Dosage_Unit",
       "baseDefinition": "Ceftriaxone_MS",
-      "fhirField": "dosage.doseAndRate.doseQuantity.unit",
+      "fhirField": "dosage.dose.unit",
       "resultType": "Drug",
       "questionConcept": "20000005",
-      "answerValue": "target.dosage.doseAndRate.doseQuantity.unit",
-      "sourceValue": "target.dosage.doseAndRate.doseQuantity.unit"
+      "answerValue": "target.dosage.dose.unit",
+      "sourceValue": "target.dosage.dose.unit"
     },
     {
       "name": "Ceftriaxone_MS_Date_Medication_Started",
       "baseDefinition": "Ceftriaxone_MS",
-      "fhirField": "effectiveDateTime",
+      "fhirField": "effective",
       "resultType": "Drug",
       "questionConcept": "20000005",
-      "answerValue": "target.effectiveDateTime",
-      "sourceValue": "target.effectiveDateTime"
+      "answerValue": "target.effective as FHIR.dateTime",
+      "sourceValue": "target.effective as FHIR.dateTime"
     }
   ],
     "returnAggregator" :{

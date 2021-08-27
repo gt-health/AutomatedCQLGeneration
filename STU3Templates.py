@@ -4,7 +4,6 @@
 cql_header = '''library {} version '1.0'
 using FHIR version '3.0.0'
 include FHIRHelpers version '3.0.0' called FHIRHelpers
-context Patient
 '''
 
 codesystems_map = {'http://loinc.org': 'LOINC' ,
@@ -15,11 +14,11 @@ codesystems_map = {'http://loinc.org': 'LOINC' ,
                    'http://hl7.org/fhir/sid/icd-10': 'ICD10'}
 
 resource_temporal_map = {'Encounter': 'period.start',
-                         'Condition': 'onsetDateTime',
-                         'Procedure': 'performedDateTime',
-                         'Observation': 'effectiveDateTime',
+                         'Condition': 'onset',
+                         'Procedure': 'performed',
+                         'Observation': 'effective',
                          'MedicationRequest': 'authoredOn',
-                         'MedicationStatement': 'effectiveDateTime'
+                         'MedicationStatement': 'effective'
                          }
 fhir_choice_fields_map = {
     'abatement': ['DateTime','Age'],
@@ -30,7 +29,7 @@ fhir_choice_fields_map = {
     'multipleBirth': ['Boolean','Reference'],
     'occurrance': ['DateTime','String'],
     'onset': ['DateTime','Age','Period','Range','String'],
-    'protocolApplied': ['PositiveInt','String']
+    'protocolApplied': ['PositiveInt','String'],
     'reported': ['Boolean','Reference'],
     'statusReason': ['CodeableConcept','Reference'],
     'value': ['Quantity','CodeableConcept','String','Boolean','Integer','Ratio','SampledData','Time','DateTime','Period']
@@ -42,11 +41,11 @@ cql_codesystem = '''codesystem "{}": '{}'
 
 cql_event = '''define "{}": [{}: Code in "{}"]'''
 
-cql_event_return = '''define "EventReturn" "{}" E return E.{}'''
+cql_event_return = '''define "EventReturn": "{}" E return (E.{} as FHIR.dateTime)'''
 
 cql_temporal_start_suffix = '''where target.{} after "EventReturn" {}'''
 cql_temporal_end_suffix = '''where target.{} before "EventReturn" {}'''
-cql_temporal_both_suffix = '''where target.{} after "EventReturn" {} and target.{} before "EventReturn" {}'''
+cql_temporal_both_suffix = '''with "EventReturn" e\n\t\tsuch that (target.{} as FHIR.{}) after e {} and (target.{} as FHIR.{}) before e {}\n\t\tor FHIRHelpers.ToInterval((target.{})) overlaps Interval[e {}, e {}]'''
 
 cql_temporal_datetime_start_suffix = '''where target.{} after {}'''
 cql_temporal_datetime_end_suffix = '''where target.{} before {}'''
@@ -59,6 +58,8 @@ cql_shaping_derived = '''define "{}Tuple": from {} target\n\treturn Tuple {{\n\t
 
 cql_aggregator_prefix = '''define "{}":\n\t"{}" '''
 cql_aggregator_suffix = '''{} "{}" '''
+
+cql_event_return_with_choice_cast = '''define "EventReturn": "{}" E return (E.{} as FHIR.{})'''
 
 basic_data_entity_template = '''
 define final {}:
@@ -99,7 +100,7 @@ cql_template = '''
 '''
 
 # +
-cql_concept_code_template = '''Code '{}' from {}'''
+cql_concept_code_template = '''Code '{}' from "{}"'''
 
 cql_concept_template = '''define "{}": Concept {{\n\t{}\n}}'''
 
