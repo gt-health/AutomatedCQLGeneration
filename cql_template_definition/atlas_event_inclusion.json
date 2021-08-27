@@ -56,11 +56,11 @@
     {
       "name": "Penicillin_MS_Dosage",
       "baseDefinition": "Penicillin_MS",
-      "fhirField": "dosage.dose.value",
+      "fhirField": "dosage[0].dose",
       "resultType": "Drug",
       "questionConcept": "20000005",
-      "answerValue": "target.dosage.dose.value + \" \" + target.dosage.dose.unit",
-      "sourceValue": "target.dosage.dose.value + \" \" + target.dosage.dose.unit"
+      "answerValue": "target.dosage[0].dose",
+      "sourceValue": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
     },
     {
       "name": "Penicillin_MS_Date_Medication_Started",
@@ -72,22 +72,13 @@
       "sourceValue": "target.effective as FHIR.dateTime"
     },
     {
-      "name": "Ceftriaxone_MS_Dose",
+      "name": "Ceftriaxone_MS_Dosage",
       "baseDefinition": "Ceftriaxone_MS",
       "fhirField": "dosage.dose.value",
       "resultType": "Drug",
       "questionConcept": "20000005",
       "answerValue": "target.dosage.dose.value",
-      "sourceValue": "target.dosage.dose.value"
-    },
-    {
-      "name": "Ceftriaxone_MS_Dosage_Unit",
-      "baseDefinition": "Ceftriaxone_MS",
-      "fhirField": "dosage.dose.unit",
-      "resultType": "Drug",
-      "questionConcept": "20000005",
-      "answerValue": "target.dosage.dose.unit",
-      "sourceValue": "target.dosage.dose.unit"
+      "sourceValue": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
     },
     {
       "name": "Ceftriaxone_MS_Date_Medication_Started",

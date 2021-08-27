@@ -54,7 +54,7 @@ cql_temporal_interval_suffix = '''where target.{} during Interval[@{}, @{}]'''
 cql_filter = '''define "{}": {}({})'''
 
 cql_shaping = '''define "{}Tuple": from {} target\n\treturn Tuple {{\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}'\n\t}}'''
-cql_shaping_derived = '''define "{}Tuple": from {} target\n\treturn Tuple {{\n\t\tfhirResourceId: target.id,\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}',\n\t\tfield: target.{}\n\t}}'''
+cql_shaping_derived = '''define "{}Tuple": from {} target\n\treturn Tuple {{\n\t\tfhirResourceId: target.id,\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}',\n\t\tfield: 'target.{}'\n\t}}'''
 
 cql_aggregator_prefix = '''define "{}":\n\t"{}" '''
 cql_aggregator_suffix = '''{} "{}" '''
