@@ -122,9 +122,9 @@ class STU3Generator:
                     if inclusion.timeFrame.start and inclusion.timeFrame.end:
                         temporal_suffix = STU3Templates.cql_temporal_both_suffix.format(temporal_field, 'dateTime',inclusion.timeFrame.start, temporal_field, 'dateTime', inclusion.timeFrame.end, temporal_field, inclusion.timeFrame.start, inclusion.timeFrame.end)
                     elif inclusion.timeFrame.start:
-                        temporal_suffix = STU3Templates.cql_temporal_start_suffix.format(temporal_field, inclusion.timeFrame.start)
+                        temporal_suffix = STU3Templates.cql_temporal_start_suffix.format(temporal_field, 'dateTime', inclusion.timeFrame.start)
                     elif inclusion.timeFrame.end:
-                        temporal_suffix = STU3Templates.cql_temporal_end_suffix.format(temporal_field, inclusion.timeFrame.end)
+                        temporal_suffix = STU3Templates.cql_temporal_end_suffix.format(temporal_field, 'dateTime', inclusion.timeFrame.end)
                     inclusion_cql = '\n\t'.join([event_target, temporal_suffix])
                     inclusions_cql_list.append(inclusion_cql)
 
@@ -143,7 +143,7 @@ class STU3Generator:
                     inclusions_cql_list.append(inclusion_cql)
 
             filter_name = inclusion.name
-            if inclusion.filterType:
+            if inclusion.filterType != '':
                 filter_name = ''.join([inclusion.filterType, inclusion.name])
                 filter_cql = STU3Templates.cql_filter.format(filter_name, inclusion.filterType, inclusion.name)
                 inclusions_cql_list.append(filter_cql)
@@ -160,7 +160,10 @@ class STU3Generator:
     def generateDervied(deriveds):
         deriveds_cql_list = []
         for derived in deriveds:
-            baseFinalName = STU3Generator.baseNameToFinalNameMap[derived.baseDefinition]
+            if STU3Generator.baseNameToFinalNameMap:
+                baseFinalName = STU3Generator.baseNameToFinalNameMap[derived.baseDefinition]
+            else:
+                baseFinalName = derived.baseDefinition
             derived_cql = STU3Templates.cql_shaping_derived.format(derived.name, baseFinalName,
                                                                    derived.questionConcept, derived.sourceValue,
                                                                    derived.answerValue, derived.resultType,

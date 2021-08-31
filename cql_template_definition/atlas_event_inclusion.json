@@ -31,7 +31,7 @@
         "questionConcept": "20000005",
         "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G",
         "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
-        "filterType": "First",
+        "filterType": "",
         "timeFrame": {
             "start": "+ 2 weeks",
             "end": "+ 4 weeks"
@@ -45,7 +45,7 @@
         "questionConcept": "20000005",
         "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^1665021^ceftriaxone 1000 MG Injection",
         "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
-        "filterType": "First",
+        "filterType": "",
         "timeFrame": {
             "start": "+ 2 weeks",
             "end": "+ 4 weeks"
