@@ -32,7 +32,7 @@ class STU3Generator:
         inclusions, inclusion_names = STU3Generator.generateInclusions(script.inclusions, aggregatorEntity)
         deriveds = STU3Generator.generateDervied(script.deriveds)
         aggregator = STU3Generator.generateAggregator(inclusion_names, aggregatorEntity)
-        output = '\n'.join([header, codesystems, concepts, event, inclusions, deriveds, aggregator])
+        output = '\n'.join([header, codesystems, concepts, '''context Patient\n''', event, inclusions, deriveds, aggregator])
         return output
 
     def generateCodesystems(concepts):
@@ -99,8 +99,7 @@ class STU3Generator:
 
     def generateEvent(event):
         event_cql = STU3Templates.cql_event.format(event.name, event.fhirResource, event.concept)
-        event_return_field = ''.join([event.returnField.lower(),event.returnType])
-        event_return = STU3Templates.cql_event_return.format(event.name,event_return_field)
+        event_return = STU3Templates.cql_event_return_with_choice_cast.format(event.name,event.returnField.lower(), event.returnType)
         event_output = '\n'.join([event_cql, event_return])
         return event_output
 
@@ -121,7 +120,7 @@ class STU3Generator:
 
                 if inclusion.timeFrame.start[0]=='+' or inclusion.timeFrame.end[0]=='+':
                     if inclusion.timeFrame.start and inclusion.timeFrame.end:
-                        temporal_suffix = STU3Templates.cql_temporal_both_suffix.format(temporal_field, inclusion.timeFrame.start, temporal_field, inclusion.timeFrame.end)
+                        temporal_suffix = STU3Templates.cql_temporal_both_suffix.format(temporal_field, 'dateTime',inclusion.timeFrame.start, temporal_field, 'dateTime', inclusion.timeFrame.end, temporal_field, inclusion.timeFrame.start, inclusion.timeFrame.end)
                     elif inclusion.timeFrame.start:
                         temporal_suffix = STU3Templates.cql_temporal_start_suffix.format(temporal_field, inclusion.timeFrame.start)
                     elif inclusion.timeFrame.end:

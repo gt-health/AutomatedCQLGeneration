@@ -306,7 +306,8 @@ if __name__ == "__main__":
     parser.add_argument('--input', help='optional input json, assumes file name of input_json.json')
     parser.add_argument("--output", help="optional output file name, assumes same name as input")
     args = parser.parse_args()
-    input_file = 'input_json.json'
+    #input_file = 'input_json.json'
+    input_file = 'cql_template_definition/atlas_event_inclusion.json'
     if args.input:
         input_file = args.input
     input_split = re.split('/|\.', input_file)
@@ -317,8 +318,6 @@ if __name__ == "__main__":
     with open(output_file, 'w+') as f:
         f.write(cql_from_json_with_entities(input_file))
 
-    
-    
     
     
     

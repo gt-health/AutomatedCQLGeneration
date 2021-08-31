@@ -91,7 +91,10 @@ class EventAndInclusionScript(BaseScript):
         self.concepts = list(map(lambda x: ConceptEntity(x), data['concepts']))
         self.event = EventEntity(data['event'])
         self.inclusions = list(map(lambda x: InclusionEntity(x), data['inclusions']))
-        self.deriveds = list(map(lambda x: DerivedEntity(x), data['deriveds']))
+        try:
+            self.deriveds = list(map(lambda x: DerivedEntity(x), data['deriveds']))
+        except KeyError:
+            pass
         self.returnAggregator = AggregateEntity(data['returnAggregator'])
         
         
