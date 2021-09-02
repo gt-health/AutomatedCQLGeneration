@@ -1,0 +1,51 @@
+{
+    "name": "Syphilis_Medication_Treatment",
+    "type": "IndexEventAndInclusion",
+    "concepts":[
+      {
+        "name": "SyphilisDiagnosisConcept",
+        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868973/expression"
+      },
+      {
+        "name": "SyphilisLabConcept",
+        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1869028/expression"
+      }
+    ],
+    "index_event": {
+      "name": "Syphilis_Condition",
+      "fhirResource": "Condition",
+      "conceptReference": "SyphilisDiagnosisConcept",
+      "returnField": "Onset",
+      "returnType" : "dateTime"
+    },
+    "inclusions": [
+      {
+        "name": "SyphillisTest_Lab",
+        "fhirResource": "Observation",
+        "conceptReference": "SyphilisLabConcept",
+        "filterType": "",
+        "timeFrame_relative_to_index_event": {
+            "start": "- 2 weeks",
+            "end": "+ 4 weeks"
+        }
+      }
+    ],
+  "deriveds": [
+    {
+      "name": "Syphilis_Test_Type",
+      "baseInclusion": "SyphillisTest_Lab",
+      "fhirField": "code",
+      "fhirReturnResource":"Observation",
+      "questionConcept": "20000000671",
+      "answerValue": {
+        "valueType": "String",
+        "renderAnswerWithCQL": true,
+        "value": "target.code.coding[0].system+' '+target.code.coding[0].code",
+      },
+      "sourceNote": "target.code.coding[0].code+'^'+target.code.coding[0].system"
+    }
+  ],
+    "returnAggregator" :{
+      "type": "union"
+    }
+}
