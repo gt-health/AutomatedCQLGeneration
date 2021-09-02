@@ -11,7 +11,7 @@
         "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1869028/expression"
       }
     ],
-    "index_event": {
+    "indexEvent": {
       "name": "Syphilis_Condition",
       "fhirResource": "Condition",
       "conceptReference": "SyphilisDiagnosisConcept",
@@ -24,7 +24,7 @@
         "fhirResource": "Observation",
         "conceptReference": "SyphilisLabConcept",
         "filterType": "",
-        "timeFrame_relative_to_index_event": {
+        "timeFrameRelativeToIndexEvent": {
             "start": "- 2 weeks",
             "end": "+ 4 weeks"
         }
