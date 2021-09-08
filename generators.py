@@ -9,10 +9,10 @@ import entities
 class STU3Generator:
     baseNameToFinalNameMap = {}
     def generate(script):
-        if script.scriptType == 'EventAndInclusionScript':
-            return STU3Generator.generateEventAndInclusion(script)
+        if script.scriptType == 'IndexEventAndInclusionScript':
+            return STU3Generator.generateIndexEventAndInclusion(script)
 
-    def generateEventAndInclusion(script):
+    def generateIndexEventAndInclusion(script):
         STU3Generator.baseNameToFinalNameMap = {}
         script_concepts = []
         atlas_concepts = []
@@ -25,14 +25,14 @@ class STU3Generator:
         script_concepts.append(STU3Generator.translateFromAtlas(atlas_concepts))
         codesystems = STU3Generator.generateCodesystems(script_concepts[0])
         concepts = STU3Generator.generateConcepts(script_concepts[0])
-        event = STU3Generator.generateEvent(script.event)
+        indexEvent = STU3Generator.generateIndexEvent(script.indexEvent)
         aggregatorEntity = None
         if script.returnAggregator:
             aggregatorEntity = script.returnAggregator
         inclusions, inclusion_names = STU3Generator.generateInclusions(script.inclusions, aggregatorEntity)
         deriveds = STU3Generator.generateDervied(script.deriveds)
         aggregator = STU3Generator.generateAggregator(inclusion_names, aggregatorEntity)
-        output = '\n'.join([header, codesystems, concepts, '''context Patient\n''', event, inclusions, deriveds, aggregator])
+        output = '\n'.join([header, codesystems, concepts, '''context Patient\n''', indexEvent, inclusions, deriveds, aggregator])
         return output
 
     def generateCodesystems(concepts):
@@ -97,11 +97,11 @@ class STU3Generator:
         else:
             return codesystem
 
-    def generateEvent(event):
-        event_cql = STU3Templates.cql_event.format(event.name, event.fhirResource, event.concept)
-        event_return = STU3Templates.cql_event_return_with_choice_cast.format(event.name,event.returnField.lower(), event.returnType)
-        event_output = '\n'.join([event_cql, event_return])
-        return event_output
+    def generateIndexEvent(indexEvent):
+        base_inclusion = STU3Templates.cql_index_event.format(indexEvent.name, indexEvent.fhirResource, indexEvent.conceptReference)
+        index_event_return = STU3Templates.cql_index_event_return_with_choice_cast.format(indexEvent.name,indexEvent.returnField.lower(), indexEvent.returnType)
+        index_event_output = '\n'.join([base_inclusion, index_event_return])
+        return index_event_output
 
     def convertToISO(date):
         return parser.parse(date).isoformat()
@@ -114,10 +114,10 @@ class STU3Generator:
         for inclusion in inclusions:
             temporal_field = STU3Templates.resource_temporal_map[inclusion.fhirResource]
             inclusion_names.append(inclusion.name)
+            base_inclusion = STU3Templates.cql_index_event.format(inclusion.name, inclusion.fhirResource, inclusion.conceptReference)
+            
             if inclusion.timeFrame:
-                event_cql = STU3Templates.cql_event.format(inclusion.name, inclusion.fhirResource, inclusion.concept)
-                event_target = ' '.join([event_cql, 'target'])
-
+                base_inclusion_target = ' '.join([base_inclusion, 'target'])
                 if inclusion.timeFrame.start[0]=='+' or inclusion.timeFrame.end[0]=='+':
                     if inclusion.timeFrame.start and inclusion.timeFrame.end:
                         temporal_suffix = STU3Templates.cql_temporal_both_suffix.format(temporal_field, 'dateTime',inclusion.timeFrame.start, temporal_field, 'dateTime', inclusion.timeFrame.end, temporal_field, inclusion.timeFrame.start, inclusion.timeFrame.end)
@@ -125,7 +125,7 @@ class STU3Generator:
                         temporal_suffix = STU3Templates.cql_temporal_start_suffix.format(temporal_field, 'dateTime', inclusion.timeFrame.start)
                     elif inclusion.timeFrame.end:
                         temporal_suffix = STU3Templates.cql_temporal_end_suffix.format(temporal_field, 'dateTime', inclusion.timeFrame.end)
-                    inclusion_cql = '\n\t'.join([event_target, temporal_suffix])
+                    inclusion_cql = '\n\t'.join([base_inclusion_target, temporal_suffix])
                     inclusions_cql_list.append(inclusion_cql)
 
                 elif inclusion.timeFrame.start[0].isnumeric() or inclusion.timeFrame.end[0].isnumeric:
@@ -139,8 +139,10 @@ class STU3Generator:
                     elif inclusion.timeFrame.end:
                         end = STU3Generator.convertToISO(inclusion.timeFrame.end)
                         temporal_suffix = STU3Templates.cql_temporal_datetime_end_suffix.format(temporal_field, end)
-                    inclusion_cql = '\n\t'.join([event_target, temporal_suffix])
+                    inclusion_cql = '\n\t'.join([base_inclusion_target, temporal_suffix])
                     inclusions_cql_list.append(inclusion_cql)
+            else:
+                inclusions_cql_list.append(base_inclusion)
 
             filter_name = inclusion.name
             if inclusion.filterType != '':
@@ -149,11 +151,6 @@ class STU3Generator:
                 inclusions_cql_list.append(filter_cql)
                 STU3Generator.baseNameToFinalNameMap[inclusion.name] = filter_name
 
-            shaping_cql = STU3Templates.cql_shaping.format(filter_name, filter_name, inclusion.questionConcept,
-                                                           inclusion.sourceValue, inclusion.answerValue, inclusion.resultType,
-                                                           temporal_field)
-            inclusions_cql_list.append(shaping_cql)
-
         inclusions_output = '\n'.join(inclusions_cql_list)
         return inclusions_output, inclusion_names
 
@@ -161,13 +158,18 @@ class STU3Generator:
         deriveds_cql_list = []
         for derived in deriveds:
             if STU3Generator.baseNameToFinalNameMap:
-                baseFinalName = STU3Generator.baseNameToFinalNameMap[derived.baseDefinition]
+                baseFinalName = STU3Generator.baseNameToFinalNameMap[derived.baseInclusion]
             else:
-                baseFinalName = derived.baseDefinition
-            derived_cql = STU3Templates.cql_shaping_derived.format(derived.name, baseFinalName,
-                                                                   derived.questionConcept, derived.sourceValue,
-                                                                   derived.answerValue, derived.resultType,
-                                                                   derived.fhirField)
+                baseFinalName = derived.baseInclusion
+            
+            if not derived.answerValue.renderAnswerWithCQL:
+                answerValue = ''.join(['\'',derived.answerValue.value, '\''])
+            else:
+                answerValue = derived.answerValue.value
+
+            derived_cql = STU3Templates.cql_shaping_derived.format(derived.name, baseFinalName, derived.fhirField,
+                                                                   derived.questionConcept, derived.sourceNote,
+                                                                   answerValue, derived.answerValue.valueType)
             deriveds_cql_list.append(derived_cql)
         derived_output = '\n'.join(deriveds_cql_list)
         return derived_output

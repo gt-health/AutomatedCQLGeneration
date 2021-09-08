@@ -40,7 +40,7 @@
       "answerValue": {
         "valueType": "String",
         "renderAnswerWithCQL": true,
-        "value": "target.code.coding[0].system+' '+target.code.coding[0].code",
+        "value": "target.code.coding[0].system+' '+target.code.coding[0].code"
       },
       "sourceNote": "target.code.coding[0].code+'^'+target.code.coding[0].system"
     }

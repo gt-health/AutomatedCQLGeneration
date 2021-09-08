@@ -39,9 +39,7 @@ fhir_choice_fields_map = {
 cql_codesystem = '''codesystem "{}": '{}'
 '''
 
-cql_event = '''define "{}": [{}: Code in "{}"]'''
-
-cql_index_event = '''define "IndexEvent": "{}" E return (E.{} as FHIR.dateTime)'''
+cql_index_event = '''define "{}": [{}: Code in "{}"]'''
 
 cql_temporal_start_suffix = '''where (target.{} as FHIR.{}) after "IndexEvent" {}'''
 cql_temporal_end_suffix = '''where (target.{} as FHIR.{}) before "IndexEvent" {}'''
@@ -54,12 +52,12 @@ cql_temporal_interval_suffix = '''where target.{} during Interval[@{}, @{}]'''
 cql_filter = '''define "{}": {}({})'''
 
 cql_shaping = '''define "{}Tuple": from {} target\n\treturn all Tuple {{\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}'\n\t}}'''
-cql_shaping_derived = '''define "{}Tuple": from {} target\n\treturn all Tuple {{\n\t\tfhirResourceId: target.id,\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}',\n\t\tfield: 'target.{}'\n\t}}'''
+cql_shaping_derived = '''define "{}Tuple": from "{}" target\n\treturn all Tuple {{\n\t\tfhirResourceId: target.id,\n\t\tfhirField: '{}',\n\t\tquestionConcept: '{}',\n\t\tsourceNote: {}, \n\t\tanswerValue: {},\n\t\tvalueType: '{}'\n\t}}'''
 
 cql_aggregator_prefix = '''define "{}":\n\t"{}" '''
 cql_aggregator_suffix = '''{} "{}" '''
 
-cql_event_return_with_choice_cast = '''define "IndexEvent": "{}" E return (E.{} as FHIR.{})'''
+cql_index_event_return_with_choice_cast = '''define "IndexEvent": "{}" E return (E.{} as FHIR.{})'''
 
 basic_data_entity_template = '''
 define final {}:

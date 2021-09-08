@@ -54,9 +54,9 @@
       "answerValue": {
         "valueType": "String",
         "renderAnswerWithCQL": false,
-        "value": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G",
+        "value": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G"
       },
-      "sourceNote": "target.medication.coding[0].code+'^'target.medication.coding[0].system"
+      "sourceNote": "target.medication.coding[0].code+'^'+target.medication.coding[0].system"
     },
     {
       "name": "Penicillin_MS_Dosage",
@@ -67,7 +67,7 @@
       "answerValue": {
         "valueType": "Quantity",
         "renderAnswerWithCQL": true,
-        "value": "target.dosage[0].dose as FHIR.Quantity",
+        "value": "target.dosage[0].dose as FHIR.Quantity"
       },
       "sourceNote": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
     },
@@ -80,7 +80,7 @@
       "answerValue": {
         "valueType": "String",
         "renderAnswerWithCQL": true,
-        "value": "target.effective as FHIR.dateTime",
+        "value": "target.effective as FHIR.dateTime"
       },
       "sourceNote": "ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))"
     }
