@@ -39,13 +39,11 @@ fhir_choice_fields_map = {
 cql_codesystem = '''codesystem "{}": '{}'
 '''
 
-cql_event = '''define "{}": [{}: Code in "{}"]'''
+cql_index_event = '''define "{}": [{}: Code in "{}"]'''
 
-cql_event_return = '''define "EventReturn": "{}" E return (E.{} as FHIR.dateTime)'''
-
-cql_temporal_start_suffix = '''where target.{} after "EventReturn" {}'''
-cql_temporal_end_suffix = '''where target.{} before "EventReturn" {}'''
-cql_temporal_both_suffix = '''with "EventReturn" e\n\t\tsuch that (target.{} as FHIR.{}) after e {} and (target.{} as FHIR.{}) before e {}\n\t\tor FHIRHelpers.ToInterval((target.{})) overlaps Interval[e {}, e {}]'''
+cql_temporal_start_suffix = '''where (target.{} as FHIR.{}) after "IndexEvent" {}'''
+cql_temporal_end_suffix = '''where (target.{} as FHIR.{}) before "IndexEvent" {}'''
+cql_temporal_both_suffix = '''with "IndexEvent" e\n\t\tsuch that (target.{} as FHIR.{}) after e {} and (target.{} as FHIR.{}) before e {}\n\t\tor FHIRHelpers.ToInterval((target.{})) overlaps Interval[e {}, e {}]'''
 
 cql_temporal_datetime_start_suffix = '''where target.{} after {}'''
 cql_temporal_datetime_end_suffix = '''where target.{} before {}'''
@@ -53,13 +51,13 @@ cql_temporal_interval_suffix = '''where target.{} during Interval[@{}, @{}]'''
 
 cql_filter = '''define "{}": {}({})'''
 
-cql_shaping = '''define "{}Tuple": from {} target\n\treturn Tuple {{\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}'\n\t}}'''
-cql_shaping_derived = '''define "{}Tuple": from {} target\n\treturn Tuple {{\n\t\tfhirResourceId: target.id,\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}',\n\t\tfield: 'target.{}'\n\t}}'''
+cql_shaping = '''define "{}Tuple": from {} target\n\treturn all Tuple {{\n\t\tquestionConcept: '{}',\n\t\tsourceValue: {}, \n\t\tanswerValue: '{}',\n\t\tresultType: '{}'\n\t}}'''
+cql_shaping_derived = '''define "{}Tuple": from "{}" target\n\treturn all Tuple {{\n\t\tfhirResourceId: target.id,\n\t\tfhirField: '{}',\n\t\tquestionConcept: '{}',\n\t\tsourceNote: {}, \n\t\tanswerValue: {},\n\t\tvalueType: '{}'\n\t}}'''
 
 cql_aggregator_prefix = '''define "{}":\n\t"{}" '''
 cql_aggregator_suffix = '''{} "{}" '''
 
-cql_event_return_with_choice_cast = '''define "EventReturn": "{}" E return (E.{} as FHIR.{})'''
+cql_index_event_return_with_choice_cast = '''define "IndexEvent": "{}" E return (E.{} as FHIR.{})'''
 
 basic_data_entity_template = '''
 define final {}:

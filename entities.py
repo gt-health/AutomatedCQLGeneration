@@ -16,15 +16,6 @@ class BaseScript:
         print('Trying to print script of type ', self.scriptType)
         return str(vars(self))
 
-class ShapedEntity(BaseEntity):
-    def __init__(self, data):
-        super().__init__()
-        self.entityType = 'ShapedEntity'
-        self.resultType = data['resultType']
-        self.questionConcept = data['questionConcept']
-        self.answerValue = data['answerValue']
-        self.sourceValue = data['sourceValue']
-
 class SimpleRetrievalEntity(BaseEntity):
     def __init__(self, group, fhir_resource, code_system, codes, valueset_oid):
         super().__init__()
@@ -84,12 +75,12 @@ class NonEntity:
 
 
     
-class EventAndInclusionScript(BaseScript):
+class IndexEventAndInclusionScript(BaseScript):
     def __init__(self, data):
         super().__init__(data)
-        self.scriptType = 'EventAndInclusionScript'
+        self.scriptType = 'IndexEventAndInclusionScript'
         self.concepts = list(map(lambda x: ConceptEntity(x), data['concepts']))
-        self.event = EventEntity(data['event'])
+        self.indexEvent = IndexEventEntity(data['indexEvent'])
         self.inclusions = list(map(lambda x: InclusionEntity(x), data['inclusions']))
         try:
             self.deriveds = list(map(lambda x: DerivedEntity(x), data['deriveds']))
@@ -113,31 +104,44 @@ class CodesetEntity(BaseEntity):
         self.codelist = data['codelist']
         self.system = data['system']
 
-class EventEntity(SimpleRetrievalEntity):
+class IndexEventEntity(SimpleRetrievalEntity):
     def __init__(self, data):
-        self.entityType = "EventEntity"
+        self.entityType = "IndexEventEntity"
         self.name = data['name']
         self.fhirResource = data['fhirResource']
-        self.concept = data['concept']
+        self.conceptReference = data['conceptReference']
         self.returnField = data['returnField']
         self.returnType = data['returnType']
         
-class InclusionEntity(ShapedEntity):
+class InclusionEntity(BaseEntity):
     def __init__(self, data):
-        super().__init__(data)
+        super().__init__()
         self.entityType = "InclusionEntity"
         self.name = data['name']
         self.fhirResource = data['fhirResource']
-        self.concept = data['concept']
+        self.conceptReference = data['conceptReference']
         self.filterType = data['filterType']
-        self.timeFrame = TimeFrameEntity(data['timeFrame'])
+        if checkForTimeFrame(data['timeFrameRelativeToIndexEvent']):
+            self.timeFrame = TimeFrameEntity(data['timeFrameRelativeToIndexEvent'])
+        else: self.timeFrame = None
 
-class DerivedEntity(ShapedEntity):
+class DerivedEntity(BaseEntity):
     def __init__(self, data):
-        super().__init__(data)
-        self.baseDefinition = data['baseDefinition']
+        super().__init__()
         self.name = data['name']
+        self.baseInclusion = data['baseInclusion']
         self.fhirField = data['fhirField']
+        self.fhirReturnResource = data['fhirReturnResource']
+        self.questionConcept = data['questionConcept']
+        self.answerValue = AnswerValueEntity(data['answerValue'])
+        self.sourceNote = data['sourceNote']
+
+class AnswerValueEntity(BaseEntity):
+    def __init__(self, data):
+        super().__init__()
+        self.valueType = data['valueType']
+        self.renderAnswerWithCQL = data['renderAnswerWithCQL']
+        self.value = data['value']
 
 class AggregateEntity(BaseEntity):
     def __init__(self, data):
@@ -172,3 +176,9 @@ class AtlasConceptEntity(BaseEntity):
         self.DOMAIN_ID = data['concept']['DOMAIN_ID']
         self.VOCABULARY_ID = data['concept']['VOCABULARY_ID']
         self.CONCEPT_CLASS_ID = data['concept']['CONCEPT_CLASS_ID']
+
+def checkForTimeFrame(timeFrame):
+        if (timeFrame != '' and timeFrame != {} and (timeFrame['start'] != '' or timeFrame['end'] != '')):
+            return True
+        else:
+            return False

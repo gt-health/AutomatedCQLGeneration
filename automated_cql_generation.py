@@ -293,8 +293,8 @@ def cql_from_json_with_entities(input_json):
         data = json.load(f)
         
     scriptType = data['type']
-    if scriptType == 'EventAndInclusion':
-        script = EventAndInclusionScript(data)
+    if scriptType == 'IndexEventAndInclusion':
+        script = IndexEventAndInclusionScript(data)
     #print(script)
     
     return STU3Generator.generate(script)

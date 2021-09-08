@@ -28,7 +28,10 @@
         "fhirResource": "MedicationStatement",
         "conceptReference": "PenicillinConcept",
         "filterType": "",
-        "timeFrameRelativeToIndexEvent": ""
+        "timeFrameRelativeToIndexEvent": {
+            "start": "",
+            "end": ""
+        }
       },
       {
         "name": "Ceftriaxone_MS",
@@ -36,7 +39,7 @@
         "conceptReference": "CeftriaxoneConcept",
         "filterType": "",
         "timeFrameRelativeToIndexEvent": {
-            "start": "+ 2 weeks",
+            "start": "+ 0 weeks",
             "end": "+ 4 weeks"
         }
       }
