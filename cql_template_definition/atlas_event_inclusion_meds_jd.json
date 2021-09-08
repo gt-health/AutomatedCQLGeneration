@@ -29,8 +29,8 @@
         "conceptReference": "PenicillinConcept",
         "filterType": "",
         "timeFrameRelativeToIndexEvent": {
-            "start": "+ 0 weeks",
-            "end": "+ 4 weeks"
+            "start": "",
+            "end": ""
         }
       },
       {
