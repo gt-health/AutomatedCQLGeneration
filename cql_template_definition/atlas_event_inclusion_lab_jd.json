@@ -24,10 +24,7 @@
         "fhirResource": "Observation",
         "conceptReference": "SyphilisLabConcept",
         "filterType": "",
-        "timeFrameRelativeToIndexEvent": {
-            "start": "- 2 weeks",
-            "end": "+ 4 weeks"
-        }
+        "timeFrameRelativeToIndexEvent": ""
       }
     ],
   "deriveds": [

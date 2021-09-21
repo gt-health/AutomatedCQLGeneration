@@ -182,6 +182,8 @@ class STU3Generator:
                 else: aggregate_cql_list.append(STU3Templates.cql_aggregator_suffix.format(aggregator.aggregateType, name))
             aggregate_output = ''.join(aggregate_cql_list)
             return aggregate_output
+        else:
+            return ''
 
     def handleChoice(choice_field_name):
         choice_types = STU3Templates.fhir_choice_fields_map[choice_field_name]
