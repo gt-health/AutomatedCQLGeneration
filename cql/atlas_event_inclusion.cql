@@ -43,13 +43,22 @@ define "Penicillin_MS_DosageTuple": from "Penicillin_MS" target
 		answerValue: target.dosage[0].dose as FHIR.Quantity,
 		valueType: 'Quantity'
 	}
-define "Penicillin_MS_Date_Medication_StartedTuple": from "Penicillin_MS" target
+define "Penicillin_MS_Date_Medication_Started_DateTimeTuple": from "Penicillin_MS" target
 	return all Tuple {
 		fhirResourceId: target.id,
 		fhirField: 'effective',
 		questionConcept: '200000077',
 		sourceNote: ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime)), 
 		answerValue: target.effective as FHIR.dateTime,
+		valueType: 'String'
+	}
+define "Penicillin_MS_Date_Medication_Started_PeriodTuple": from "Penicillin_MS" target
+	return all Tuple {
+		fhirResourceId: target.id,
+		fhirField: 'effective',
+		questionConcept: '200000077',
+		sourceNote: start of FHIRHelpers.ToInterval(target.effective as FHIR.Period), 
+		answerValue: start of FHIRHelpers.ToInterval(target.effective as FHIR.Period),
 		valueType: 'String'
 	}
 define "returnAggregator":

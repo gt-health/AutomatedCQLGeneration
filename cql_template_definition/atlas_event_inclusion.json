@@ -69,7 +69,7 @@
       "sourceNote": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
     },
     {
-      "name": "Penicillin_MS_Date_Medication_Started",
+      "name": "Penicillin_MS_Date_Medication_Started_DateTime",
       "baseInclusion": "Penicillin_MS",
       "fhirField": "effective",
       "fhirReturnResource": "Observation",
@@ -80,6 +80,19 @@
         "value": "target.effective as FHIR.dateTime"
       },
       "sourceNote": "ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))"
+    },
+    {
+      "name": "Penicillin_MS_Date_Medication_Started_Period",
+      "baseInclusion": "Penicillin_MS",
+      "fhirField": "effective",
+      "fhirReturnResource": "Observation",
+      "questionConcept": "200000077",
+      "answerValue": {
+        "valueType": "String",
+        "renderAnswerWithCQL": true,
+        "value": "start of FHIRHelpers.ToInterval(target.effective as FHIR.Period)"
+      },
+      "sourceNote": "start of FHIRHelpers.ToInterval(target.effective as FHIR.Period)"
     }
   ],
     "returnAggregator" :{
