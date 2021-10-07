@@ -2,8 +2,8 @@ library Syphilis_Medication_Treatment version '1.0'
 using FHIR version '3.0.0'
 include FHIRHelpers version '3.0.0' called FHIRHelpers
 
-codesystem "SNOMED": 'http://snomed.info/sct'
 codesystem "RxNorm": 'http://www.nlm.nih.gov/research/umls/rxnorm'
+codesystem "SNOMED": 'http://snomed.info/sct'
 
 define "SyphilisConcept": Concept {
 	Code '76272004' from "SNOMED",
@@ -39,8 +39,8 @@ define "Penicillin_MS_DosageTuple": from "Penicillin_MS" target
 		fhirResourceId: target.id,
 		fhirField: 'dosage[0].dose',
 		questionConcept: '200000066',
-		sourceNote: ToString(FHIRHelpers.ToQuantity(("target".dosage[0].dose as FHIR.Quantity))), 
-		answerValue: target.dosage[0].dose as FHIR.Quantity,
+		sourceNote: ToString(FHIRHelpers.ToQuantity((target.dosage[0].dose as FHIR.Quantity))), 
+		answerValue: ToString(FHIRHelpers.ToQuantity((target.dosage[0].dose as FHIR.Quantity))),
 		valueType: 'Quantity'
 	}
 define "Penicillin_MS_Date_Medication_StartedTuple": from "Penicillin_MS" target
@@ -48,9 +48,19 @@ define "Penicillin_MS_Date_Medication_StartedTuple": from "Penicillin_MS" target
 		fhirResourceId: target.id,
 		fhirField: 'effective',
 		questionConcept: '200000077',
-		sourceNote: ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime)), 
-		answerValue: target.effective as FHIR.dateTime,
+		sourceNote: ToString(FHIRHelpers.ToDateTime(msConvertEffective(target))), 
+		answerValue: ToString(FHIRHelpers.ToDateTime(msConvertEffective(target))),
 		valueType: 'String'
 	}
 define "returnAggregator":
 	"Penicillin_MS" union "Ceftriaxone_MS" 
+
+// Helper Functions
+define function msConvertEffective(medStatments List<FHIR.MedicationStatement>):
+	medStatments S
+		return
+			case
+				when (S.effective as FHIR.dateTime) is not null then (S.effective as FHIR.dateTime)
+				when (S.effective.start as FHIR.dateTime) is not null then (S.effective.start as FHIR.dateTime)
+				else null
+			end

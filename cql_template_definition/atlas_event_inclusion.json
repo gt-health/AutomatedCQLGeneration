@@ -64,9 +64,9 @@
       "answerValue": {
         "valueType": "Quantity",
         "renderAnswerWithCQL": true,
-        "value": "target.dosage[0].dose as FHIR.Quantity"
+        "value": "target.dosage[0].dose"
       },
-      "sourceNote": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
+      "sourceNote": "target.dosage[0].dose"
     },
     {
       "name": "Penicillin_MS_Date_Medication_Started",
@@ -77,9 +77,9 @@
       "answerValue": {
         "valueType": "String",
         "renderAnswerWithCQL": true,
-        "value": "target.effective as FHIR.dateTime"
+        "value": "target.effective"
       },
-      "sourceNote": "ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))"
+      "sourceNote": "target.effective"
     }
   ],
     "returnAggregator" :{

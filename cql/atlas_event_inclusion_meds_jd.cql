@@ -43,7 +43,7 @@ define "Penicillin_MS_DosageTuple": from "Penicillin_MS" target
 		fhirField: 'dosage[0].dose',
 		questionConcept: '200000066',
 		sourceNote: ToString(FHIRHelpers.ToQuantity(("target".dosage[0].dose as FHIR.Quantity))), 
-		answerValue: target.dosage[0].dose as FHIR.Quantity,
+		answerValue: ToString(target.dosage[0].dose as FHIR.Quantity),
 		valueType: 'Quantity'
 	}
 define "Penicillin_MS_Date_Medication_StartedTuple": from "Penicillin_MS" target

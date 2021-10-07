@@ -307,7 +307,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", help="optional output file name, assumes same name as input")
     args = parser.parse_args()
     #input_file = 'input_json.json'
-    input_file = 'cql_template_definition/atlas_event_inclusion_lab_jd.json'
+    input_file = 'cql_template_definition/atlas_event_inclusion.json'
     if args.input:
         input_file = args.input
     input_split = re.split('/|\.', input_file)
