@@ -52,6 +52,33 @@ define "Penicillin_MS_Date_Medication_StartedTuple": from "Penicillin_MS" target
 		answerValue: ToString(FHIRHelpers.ToDateTime(msConvertEffective(target))),
 		valueType: 'String'
 	}
+define "Ceftriaxone_MS_MedicationTuple": from "Ceftriaxone_MS" target
+	return all Tuple {
+		fhirResourceId: target.id,
+		fhirField: 'medication.coding[0].code',
+		questionConcept: '200000055',
+		sourceNote: target.medication.coding[0].code+'^'+target.medication.coding[0].system, 
+		answerValue: 'http://www.nlm.nih.gov/research/umls/rxnorm^1665021^ceftriaxone 1000 mg injection',
+		valueType: 'String'
+	}
+define "Ceftriaxone_MS_DosageTuple": from "Ceftriaxone_MS" target
+	return all Tuple {
+		fhirResourceId: target.id,
+		fhirField: 'dosage[0].dose',
+		questionConcept: '200000066',
+		sourceNote: ToString(FHIRHelpers.ToQuantity((target.dosage[0].dose as FHIR.Quantity))), 
+		answerValue: ToString(FHIRHelpers.ToQuantity((target.dosage[0].dose as FHIR.Quantity))),
+		valueType: 'Quantity'
+	}
+define "Ceftriaxone_MS_Date_Medication_StartedTuple": from "Ceftriaxone_MS" target
+	return all Tuple {
+		fhirResourceId: target.id,
+		fhirField: 'effective',
+		questionConcept: '200000077',
+		sourceNote: ToString(FHIRHelpers.ToDateTime(msConvertEffective(target))), 
+		answerValue: ToString(FHIRHelpers.ToDateTime(msConvertEffective(target))),
+		valueType: 'String'
+	}
 define "returnAggregator":
 	"Penicillin_MS" union "Ceftriaxone_MS" 
 
