@@ -29,7 +29,7 @@ define "Penicillin_MS_MedicationTuple": from "Penicillin_MS" target
 	return all Tuple {
 		fhirResourceId: target.id,
 		fhirField: 'medication.coding[0].code',
-		questionConcept: '200000055',
+		questionConcept: '200000001',
 		sourceNote: target.medication.coding[0].code+'^'+target.medication.coding[0].system, 
 		answerValue: 'http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G',
 		valueType: 'String'
@@ -38,7 +38,7 @@ define "Penicillin_MS_DosageTuple": from "Penicillin_MS" target
 	return all Tuple {
 		fhirResourceId: target.id,
 		fhirField: 'dosage[0].dose',
-		questionConcept: '200000066',
+		questionConcept: '200000002',
 		sourceNote: ToString(FHIRHelpers.ToQuantity(("target".dosage[0].dose as FHIR.Quantity))), 
 		answerValue: target.dosage[0].dose as FHIR.Quantity,
 		valueType: 'Quantity'
@@ -47,7 +47,7 @@ define "Penicillin_MS_Date_Medication_Started_DateTimeTuple": from "Penicillin_M
 	return all Tuple {
 		fhirResourceId: target.id,
 		fhirField: 'effective',
-		questionConcept: '200000077',
+		questionConcept: '200000003',
 		sourceNote: ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime)), 
 		answerValue: target.effective as FHIR.dateTime,
 		valueType: 'String'
