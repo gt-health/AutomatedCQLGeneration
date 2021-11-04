@@ -42,7 +42,7 @@ define "Syphilis_Condition_Onset_DateTimeTuple": from "Syphilis_Condition" targe
 		fhirResourceId: target.id,
 		fhirField: 'onset',
 		questionConcept: '2000000003',
-		sourceNote: ToString(FHIRHelpers.ToDateTime(target.onset as FHIR.dateTime)), 
+		sourceNote: StripType(ToString(FHIRHelpers.ToDateTime(target.onset as FHIR.dateTime))), 
 		answerValue: target.onset as FHIR.dateTime,
 		valueType: 'String'
 	}
@@ -78,7 +78,7 @@ define "Penicillin_MS_Date_Medication_Started_DateTimeTuple": from "Penicillin_M
 		fhirResourceId: target.id,
 		fhirField: 'effective',
 		questionConcept: '2000000004',
-		sourceNote: ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime)), 
+		sourceNote: StripType(ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))), 
 		answerValue: target.effective as FHIR.dateTime,
 		valueType: 'String'
 	}
@@ -114,7 +114,7 @@ define "Ceftriaxone_MS_Date_Medication_Started_DateTimeTuple": from "Ceftriaxone
 		fhirResourceId: target.id,
 		fhirField: 'effective',
 		questionConcept: '2000000004',
-		sourceNote: ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime)), 
+		sourceNote: StripType(ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))), 
 		answerValue: target.effective as FHIR.dateTime,
 		valueType: 'String'
 	}
@@ -130,3 +130,16 @@ define "Ceftriaxone_MS_Date_Medication_Started_PeriodTuple": from "Ceftriaxone_M
 
 define "returnAggregator":
 	"Penicillin_MS" union "Ceftriaxone_MS" 
+	
+define function StripType(Input System.String):
+	case
+		when BeginIndex(Input) = -1 then Input
+		when EndIndex(Input) = -1 then Input
+		else Substring(Input, BeginIndex(Input) + 1, EndIndex(Input) - BeginIndex(Input) - 1)
+	end
+
+define function BeginIndex(Input System.String):
+	LastPositionOf('[', Input)
+
+define function EndIndex(Input System.String):
+	PositionOf(']', Input)
