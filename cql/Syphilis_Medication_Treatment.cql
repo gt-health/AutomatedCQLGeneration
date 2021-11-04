@@ -32,7 +32,7 @@ define "Syphilis_Condition_DiagnosisTuple": from "Syphilis_Condition" target
 	return all Tuple {
 		fhirResourceId: target.id,
 		fhirField: 'code.coding[0].code',
-		questionConcept: '2000000003',
+		questionConcept: '2000000002',
 		sourceNote: target.code.coding[0].code+'^'+target.code.coding[0].system, 
 		answerValue: 'http://snomed.info/sct^76272004^Syphilis (disorder)',
 		valueType: 'String'
@@ -41,7 +41,7 @@ define "Syphilis_Condition_Onset_DateTimeTuple": from "Syphilis_Condition" targe
 	return all Tuple {
 		fhirResourceId: target.id,
 		fhirField: 'onset',
-		questionConcept: '2000000003',
+		questionConcept: '2000000002',
 		sourceNote: StripType(ToString(FHIRHelpers.ToDateTime(target.onset as FHIR.dateTime))), 
 		answerValue: StripType(ToString(FHIRHelpers.ToDateTime(target.onset as FHIR.dateTime))),
 		valueType: 'String'
@@ -50,7 +50,7 @@ define "Syphilis_Condition_Onset_PeriodTuple": from "Syphilis_Condition" target
 	return all Tuple {
 		fhirResourceId: target.id,
 		fhirField: 'onset',
-		questionConcept: '2000000003',
+		questionConcept: '2000000002',
 		sourceNote: start of FHIRHelpers.ToInterval(target.onset as FHIR.Period), 
 		answerValue: start of FHIRHelpers.ToInterval(target.onset as FHIR.Period),
 		valueType: 'String'
