@@ -43,7 +43,7 @@ define "Syphilis_Condition_Onset_DateTimeTuple": from "Syphilis_Condition" targe
 		fhirField: 'onset',
 		questionConcept: '2000000003',
 		sourceNote: StripType(ToString(FHIRHelpers.ToDateTime(target.onset as FHIR.dateTime))), 
-		answerValue: target.onset as FHIR.dateTime,
+		answerValue: StripType(ToString(FHIRHelpers.ToDateTime(target.onset as FHIR.dateTime))),
 		valueType: 'String'
 	}
 define "Syphilis_Condition_Onset_PeriodTuple": from "Syphilis_Condition" target
@@ -79,7 +79,7 @@ define "Penicillin_MS_Date_Medication_Started_DateTimeTuple": from "Penicillin_M
 		fhirField: 'effective',
 		questionConcept: '2000000004',
 		sourceNote: StripType(ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))), 
-		answerValue: target.effective as FHIR.dateTime,
+		answerValue: StripType(ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))),
 		valueType: 'String'
 	}
 define "Penicillin_MS_Date_Medication_Started_PeriodTuple": from "Penicillin_MS" target
@@ -115,7 +115,7 @@ define "Ceftriaxone_MS_Date_Medication_Started_DateTimeTuple": from "Ceftriaxone
 		fhirField: 'effective',
 		questionConcept: '2000000004',
 		sourceNote: StripType(ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))), 
-		answerValue: target.effective as FHIR.dateTime,
+		answerValue: StripType(ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))),
 		valueType: 'String'
 	}
 define "Ceftriaxone_MS_Date_Medication_Started_PeriodTuple": from "Ceftriaxone_MS" target
