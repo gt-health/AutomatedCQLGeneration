@@ -20,14 +20,9 @@ context Patient
 
 define "Syphilis_Condition": [Condition: Code in "SyphilisConcept"]
 define "IndexEvent": "Syphilis_Condition" E return (E.onset as FHIR.dateTime)
-define "Penicillin_MS": [MedicationStatement: Code in "PenicillinConcept"] target
-	with "IndexEvent" e
-		such that (target.effective as FHIR.dateTime) after e + 2 weeks and (target.effective as FHIR.dateTime) before e + 4 weeks
-		or FHIRHelpers.ToInterval((target.effective)) overlaps Interval[e + 2 weeks, e + 4 weeks]
-define "Ceftriaxone_MS": [MedicationStatement: Code in "CeftriaxoneConcept"] target
-	with "IndexEvent" e
-		such that (target.effective as FHIR.dateTime) after e + 2 weeks and (target.effective as FHIR.dateTime) before e + 4 weeks
-		or FHIRHelpers.ToInterval((target.effective)) overlaps Interval[e + 2 weeks, e + 4 weeks]
+define "Penicillin_MS": [MedicationStatement: Code in "PenicillinConcept"]
+define "Ceftriaxone_MS": [MedicationStatement: Code in "CeftriaxoneConcept"]
+
 define "Syphilis_Condition_DiagnosisTuple": from "Syphilis_Condition" target
 	return all Tuple {
 		fhirResourceId: target.id,
