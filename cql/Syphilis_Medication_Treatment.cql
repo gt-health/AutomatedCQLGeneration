@@ -28,7 +28,7 @@ define "Syphilis_Condition_DiagnosisTuple": from "Syphilis_Condition" target
 		fhirResourceId: target.id,
 		fhirField: 'code.coding[0].code',
 		questionConcept: '2000000002',
-		sourceNote: target.code.coding[0].code+'^'+target.code.coding[0].system, 
+		sourceNote: target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.code.coding[0].display, 
 		answerValue: 'http://snomed.info/sct^76272004^Syphilis (disorder)',
 		valueType: 'String'
 	}
@@ -55,7 +55,7 @@ define "Penicillin_MS_MedicationTuple": from "Penicillin_MS" target
 		fhirResourceId: target.id,
 		fhirField: 'medication.coding[0].code',
 		questionConcept: '2000000004',
-		sourceNote: target.medication.coding[0].code+'^'+target.medication.coding[0].system, 
+		sourceNote: target.medication.coding[0].system+'^'+target.medication.coding[0].code+'^'+target.medication.coding[0].display, 
 		answerValue: 'http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G',
 		valueType: 'String'
 	}
@@ -91,7 +91,7 @@ define "Ceftriaxone_MS_MedicationTuple": from "Ceftriaxone_MS" target
 		fhirResourceId: target.id,
 		fhirField: 'medication.coding[0].code',
 		questionConcept: '2000000004',
-		sourceNote: target.medication.coding[0].code+'^'+target.medication.coding[0].system, 
+		sourceNote: target.medication.coding[0].system+'^'+target.medication.coding[0].code+'^'+target.medication.coding[0].display, 
 		answerValue: 'http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G',
 		valueType: 'String'
 	}
