@@ -2,8 +2,8 @@ library Syphilis_Laboratory_Results version '1.0'
 using FHIR version '3.0.0'
 include FHIRHelpers version '3.0.0' called FHIRHelpers
 
-codesystem "SNOMED": 'http:snomed.info/sct'
-codesystem "LOINC": 'http:loinc.org'
+codesystem "SNOMED": 'http://snomed.info/sct'
+codesystem "LOINC": 'http://loinc.org'
 
 define "SyphilisDiagnosisConcept": Concept {
 Code '76272004' from "SNOMED",
@@ -109,9 +109,9 @@ Code '26658-5' from "LOINC"
 
 context Patient
 
-define "Syphilis_Condition": [Condition: code in "SyphilisDiagnosisConcept"]
+define "Syphilis_Condition": [Condition: Code in "SyphilisDiagnosisConcept"]
 define "IndexEvent": "Syphilis_Condition" E return (E.onset as FHIR.dateTime)
-define "Syphillis_Test_Obs": [Observation: code in "SyphilisLabConcept"]
+define "Syphillis_Test_Obs": [Observation: Code in "SyphilisLabConcept"]
 
 define "Syphilis_Test_Result": from "Syphillis_Test_Obs" target
     let codeStringFormat: target.code.coding[0].code+'^'+target.code.coding[0].system + '^' + target.code.coding[0].code+'^'+target.code.coding[0].display
