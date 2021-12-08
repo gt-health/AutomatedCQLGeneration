@@ -175,7 +175,7 @@ class STU3Generator:
         return derived_output
 
     def generateAggregator(inclusion_names, aggregator):
-        if aggregator and len(inclusion_names)>1:
+        if aggregator and len(inclusion_names)>=1:
             aggregate_cql_list = []
             for count, name in enumerate(inclusion_names):
                 if count==0: aggregate_cql_list.append(STU3Templates.cql_aggregator_prefix.format('returnAggregator', name))
