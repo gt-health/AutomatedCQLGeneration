@@ -16,14 +16,19 @@ define "PenicillinConcept": Concept {
 define "CeftriaxoneConcept": Concept {
 	Code '1665021' from "RxNorm"
 }
+define "SyphilisMedicationsConcept": Concept {
+	Code '18631' from "RxNorm",
+	Code '2193' from "RxNorm",
+	Code '3640' from "RxNorm",
+	Code '8698' from "RxNorm",
+	Code '10395' from "RxNorm",
+	Code '7980' from "RxNorm"
+}
 context Patient
 
 define "Syphilis_Condition": [Condition: Code in "SyphilisConcept"]
 define "IndexEvent": "Syphilis_Condition" E return (E.onset as FHIR.dateTime)
-define "Penicillin_MS": [MedicationStatement: Code in "PenicillinConcept"] target
-	with "IndexEvent" e
-		such that (target.effective as FHIR.dateTime) after e + 0 weeks and (target.effective as FHIR.dateTime) before e + 4 weeks
-		or FHIRHelpers.ToInterval((target.effective)) overlaps Interval[e + 0 weeks, e + 4 weeks]
+define "Penicillin_MS": [MedicationStatement: Code in "PenicillinConcept"]
 define "Ceftriaxone_MS": [MedicationStatement: Code in "CeftriaxoneConcept"] target
 	with "IndexEvent" e
 		such that (target.effective as FHIR.dateTime) after e + 0 weeks and (target.effective as FHIR.dateTime) before e + 4 weeks

@@ -1,88 +1,98 @@
 {
-    "name": "Syphilis_Medication_Treatment",
+    "name": "Atlas_Event_Inclusion",
     "type": "IndexEventAndInclusion",
-    "concepts":[
-      {
-        "name": "SyphilisConcept",
-        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868973/expression"
-      },
-      {
-        "name": "PenicillinConcept",
-        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868960/expression"
-      },
-      {
-        "name": "CeftriaxoneConcept",
-        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868961/expression"
-      }
+    "concepts": [{
+            "name": "SyphilisConcept",
+            "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868973/expression"
+        },
+        {
+            "name": "PenicillinConcept",
+            "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868960/expression"
+        },
+        {
+            "name": "CeftriaxoneConcept",
+            "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868961/expression"
+        }
     ],
     "indexEvent": {
-      "name": "Syphilis_Condition",
-      "fhirResource": "Condition",
-      "conceptReference": "SyphilisConcept",
-      "returnField": "Onset",
-      "returnType" : "dateTime"
+        "name": "Syphilis_Condition",
+        "fhirResource": "Condition",
+        "conceptReference": "SyphilisConcept",
+        "returnField": "Onset",
+        "returnType": "dateTime"
     },
-    "inclusions": [
-      {
-        "name": "Penicillin_MS",
-        "fhirResource": "MedicationStatement",
-        "conceptReference": "PenicillinConcept",
-        "filterType": "",
-        "timeFrameRelativeToIndexEvent": ""
-      },
-      {
-        "name": "Ceftriaxone_MS",
-        "fhirResource": "MedicationStatement",
-        "conceptReference": "CeftriaxoneConcept",
-        "filterType": "",
-        "timeFrameRelativeToIndexEvent": {
-            "start": "+ 2 weeks",
-            "end": "+ 4 weeks"
+    "inclusions": [{
+            "name": "Penicillin_MS",
+            "fhirResource": "MedicationStatement",
+            "conceptReference": "PenicillinConcept",
+            "filterType": "",
+            "timeFrameRelativeToIndexEvent": ""
+        },
+        {
+            "name": "Ceftriaxone_MS",
+            "fhirResource": "MedicationStatement",
+            "conceptReference": "CeftriaxoneConcept",
+            "filterType": "",
+            "timeFrameRelativeToIndexEvent": {
+                "start": "+ 2 weeks",
+                "end": "+ 4 weeks"
+            }
         }
-      }
     ],
-  "deriveds": [
-    {
-      "name": "Penicillin_MS_Medication",
-      "baseInclusion": "Penicillin_MS",
-      "fhirField": "medication.coding[0].code",
-      "fhirReturnResource": "Observation",
-      "questionConcept": "200000055",
-      "answerValue": {
-        "valueType": "String",
-        "renderAnswerWithCQL": false,
-        "value": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G"
-      },
-      "sourceNote": "target.medication.coding[0].code+'^'+target.medication.coding[0].system"
-    },
-    {
-      "name": "Penicillin_MS_Dosage",
-      "baseInclusion": "Penicillin_MS",
-      "fhirField": "dosage[0].dose",
-      "fhirReturnResource": "Observation",
-      "questionConcept": "200000066",
-      "answerValue": {
-        "valueType": "Quantity",
-        "renderAnswerWithCQL": true,
-        "value": "target.dosage[0].dose"
-      },
-      "sourceNote": "target.dosage[0].dose"
-    },
-    {
-      "name": "Penicillin_MS_Date_Medication_Started",
-      "baseInclusion": "Penicillin_MS",
-      "fhirField": "effective",
-      "fhirReturnResource": "Observation",
-      "questionConcept": "200000077",
-      "answerValue": {
-        "valueType": "String",
-        "renderAnswerWithCQL": true,
-        "value": "target.effective"
-      },
-      "sourceNote": "target.effective"
-    }
-  ],
-    "returnAggregator" :{
-      "type": "union"
+    "deriveds": [{
+            "name": "Penicillin_MS_Medication",
+            "baseInclusion": "Penicillin_MS",
+            "fhirField": "medication.coding[0].code",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "2000000001",
+            "answerValue": {
+                "valueType": "String",
+                "renderAnswerWithCQL": false,
+                "value": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G"
+            },
+            "sourceNote": "target.medication.coding[0].code+'^'+target.medication.coding[0].system"
+        },
+        {
+            "name": "Penicillin_MS_Dosage",
+            "baseInclusion": "Penicillin_MS",
+            "fhirField": "dosage[0].dose",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "2000000002",
+            "answerValue": {
+                "valueType": "Quantity",
+                "renderAnswerWithCQL": true,
+                "value": "target.dosage[0].dose as FHIR.Quantity"
+            },
+            "sourceNote": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
+        },
+        {
+            "name": "Penicillin_MS_Date_Medication_Started_DateTime",
+            "baseInclusion": "Penicillin_MS",
+            "fhirField": "effective",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "2000000003",
+            "answerValue": {
+                "valueType": "String",
+                "renderAnswerWithCQL": true,
+                "value": "target.effective as FHIR.dateTime"
+            },
+            "sourceNote": "ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))"
+        },
+        {
+            "name": "Penicillin_MS_Date_Medication_Started_Period",
+            "baseInclusion": "Penicillin_MS",
+            "fhirField": "effective",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "20000003",
+            "answerValue": {
+                "valueType": "String",
+                "renderAnswerWithCQL": true,
+                "value": "start of FHIRHelpers.ToInterval(target.effective as FHIR.Period)"
+            },
+            "sourceNote": "start of FHIRHelpers.ToInterval(target.effective as FHIR.Period)"
+        }
+    ],
+    "returnAggregator": {
+        "type": "union"
     }
 }

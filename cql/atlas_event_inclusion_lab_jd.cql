@@ -4,12 +4,21 @@ include FHIRHelpers version '3.0.0' called FHIRHelpers
 
 codesystem "SNOMED": 'http://snomed.info/sct'
 codesystem "LOINC": 'http://loinc.org'
+codesystem "ICD10CM": 'ICD10CM'
+codesystem "ICD10CN": 'ICD10CN'
 
-define "SyphilisDiagnosisConcept": Concept {
-	Code '76272004' from "SNOMED",
-	Code '444150000' from "SNOMED"
+define "SyphilisConcept": Concept {
+	Code 'R53.82' from "ICD10CM",
+	Code '84229001' from "SNOMED",
+	Code 'R53' from "ICD10CM",
+	Code 'R53.83' from "ICD10CM",
+	Code 'R53.8' from "ICD10CM",
+	Code '30746006' from "SNOMED",
+	Code 'L04.9' from "ICD10CN",
+	Code 'R63.4' from "ICD10CM",
+	Code '267024001' from "SNOMED"
 }
-define "SyphilisLabConcept": Concept {
+define "LabResultConcept": Concept {
 	Code '8041-6' from "LOINC",
 	Code '6660-5' from "LOINC",
 	Code '6580-7' from "LOINC",
@@ -107,15 +116,53 @@ define "SyphilisLabConcept": Concept {
 }
 context Patient
 
-define "Syphilis_Condition": [Condition: Code in "SyphilisDiagnosisConcept"]
+define "Syphilis_Condition": [Condition: Code in "SyphilisConcept"]
 define "IndexEvent": "Syphilis_Condition" E return (E.onset as FHIR.dateTime)
-define "SyphillisTest_Lab": [Observation: Code in "SyphilisLabConcept"]
-define "Syphilis_Test_TypeTuple": from "SyphillisTest_Lab" target
+define "Lab_Result_Observation": [Observation: Code in "LabResultConcept"]
+define "Lab_Result_QuantityTuple": from "Lab_Result_Observation" target
 	return all Tuple {
 		fhirResourceId: target.id,
-		fhirField: 'code',
-		questionConcept: '20000000671',
-		sourceNote: target.code.coding[0].code+'^'+target.code.coding[0].system, 
-		answerValue: target.code.coding[0].system+' '+target.code.coding[0].code,
+		fhirField: 'value.valueQuantity',
+		questionConcept: '20000008',
+		sourceNote: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueQuantity.comparator+'^'+target.valueQuantity.value+'^'+target.valueQuantity.unit,
+		answerValue: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueQuantity.comparator+'^'+target.valueQuantity.value+'^'+target.valueQuantity.unit,
 		valueType: 'String'
 	}
+define "Lab_Result_IntegerTuple": from "Lab_Result_Observation" target
+	return all Tuple {
+		fhirResourceId: target.id,
+		fhirField: 'value.valueInteger',
+		questionConcept: '20000008',
+		sourceNote: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueInteger,
+		answerValue: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueInteger,
+		valueType: 'String'
+	}
+define "Lab_Result_RatioTuple": from "Lab_Result_Observation" target
+	return all Tuple {
+		fhirResourceId: target.id,
+		fhirField: 'value.valueRatio',
+		questionConcept: '20000008',
+		sourceNote: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueRatio.numerator.value+':'+target.valueRatio.denominator.value,
+		answerValue: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueRatio.numerator.value+':'+target.valueRatio.denominator.value,
+		valueType: 'String'
+	}
+define "Lab_Result_Observation_CodeableConceptTuple": from "Lab_Result_Observation" target
+	return all Tuple {
+		fhirResourceId: target.id,
+		fhirField: 'value.valueCodeableConcept',
+		questionConcept: '20000008',
+		sourceNote: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.value.coding[0].system+'^'+target.value.coding[0].code,
+		answerValue: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.value.coding[0].system+'^'+target.value.coding[0].code,
+		valueType: 'String'
+	}
+define "Lab_Result_Observation_StringTuple": from "Lab_Result_Observation" target
+	return all Tuple {
+		fhirResourceId: target.id,
+		fhirField: 'value.valueString',
+		questionConcept: '20000008',
+		sourceNote: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.value+'^'+target.value,
+		answerValue: target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.value+'^'+target.value,
+		valueType: 'String'
+	}
+define "returnAggregator":
+	"Lab_Result_Observation"

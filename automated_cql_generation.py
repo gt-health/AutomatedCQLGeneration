@@ -73,16 +73,16 @@ def parse_questions_from_feature_csv(folder_prefix='',
     # This is the main function that is run when processing a csv into CQL and NLPQL files
     # Inputs: folder_prefix = if you want to put everything in a new subfolder, you would put that value here (defaults to nothing)
     #         form_name = the name of the form you want to create using your csv (defaults to testcsv)
-    #         file_name = the name of the csv that you want to process (defaults to test_csv.csv). It will take just the file name if the 
+    #         file_name = the name of the csv that you want to process (defaults to test_csv.csv). It will take just the file name if the
     #                     file is in the same folder or it will take the full path, but if the file is not in the same folder, you MUST provide the full path
     #         output_dir = where you want your output files to go (defaults to directory in which this file is saved)
     #         description = Description of your form (defaults to the form_name)
     # Outputs: CQL file with the generated CQL from the CSV
-    #          NLPQL file that has the CQL wrapped in a CQL Execution Task in NLPQL    
+    #          NLPQL file that has the CQL wrapped in a CQL Execution Task in NLPQL
 
     if not description:
         description = form_name
-    
+
     # Creates output folders as needed
     output_folder_path = os.path.join(output_dir, folder_prefix)
     if not os.path.exists(output_folder_path):
@@ -101,7 +101,7 @@ def parse_questions_from_feature_csv(folder_prefix='',
         file_name = '/tmp/{}.csv'.format(folder_prefix)
         with open(file_name, 'wb') as f:
             f.write(r.content)
-    
+
     # if file name is not a full path, it makes it into one
     if not (file_name.startswith('/') or file_name.startswith('C:\\')):
         file_name = os.path.dirname(os.path.realpath(__file__)) + '/' + file_name
@@ -165,7 +165,7 @@ def parse_questions_from_feature_csv(folder_prefix='',
     # creates entities_{filename}.json file
     with open(os.path.dirname(os.path.realpath(__file__))+'/entities_{}.json'.format(form_name), 'w') as f:
         f.write(json.dumps(retrievalLibrary, indent=4))
-    
+
     # Next thing to make: use the retrievalLibrary to generate the CQL instead of the individual logic below
     group_names = list(set(group_names))
     output_cql = {k:'' for k in group_names}
@@ -218,7 +218,7 @@ def parse_questions_from_feature_csv(folder_prefix='',
             related_result = cql_result_template.format(name, cql_convert_to_retrieval_statement(name, entity['fhir_resource'], entity['codes'], entity['valueset_oid'])) + related_result
             output_cql[group_name] += related_concepts
             output_cql[group_name] += related_result
-    
+
     # Writes CQL using the cql_template_header
     for item in output_cql.items():
         group_name, cql_contents  = item
@@ -246,29 +246,29 @@ def parse_questions_from_feature_csv(folder_prefix='',
             f.write(output_nlpql)
 
 def cql_from_json(input_json):
-    
+
     # Written to support creating CQL from a prespecified JSON file
     cql_statements = ''
     entityLibrary = {}
-    
+
     with open(input_json) as f:
         data = json.load(f)
-        
+
     # Generates Concept statements
     for concept in data['concepts']:
         name = concept['name']
         codelist = concept['codeset']['codelist']
         codesystem = concept['codeset']['system']
         cql_statements += cql_convert_to_concept_statement(name, codelist, codesystem, '')
-    
+
     # Generates Event Statement
     event_statement = cql_retrieval.format(data['event']['name'], data['event']['fhirResource'], 'myConcept')
     cql_statements += event_statement
     event_return = cql_event_return.format(data['event']['returnField'], data['event']['returnField'].lower()+data['event']['returnType'])
     cql_statements += event_return
-    
+
     retrievalLibrary[data['event']['name']] = EventEntity(data['event']['fhirResource'], data['concept'], data['returnField'], data['returnType'])
-    
+
     # Generates Inclusion Criteria
     for inclusion in data['Inclusion']:
         fhirResource = inclusion['fhirResource']
@@ -277,31 +277,29 @@ def cql_from_json(input_json):
         resultAnswer = inclusion['resultAnswer']
         sourceValue = inclusion['sourceValue']
         filterType = inclusion['filter']
-    
+
     filename = 'cql/{}.cql'.format(data['type'])
     cql_final = cql_template_header.format(data['type']) + cql_statements
     with open(filename, 'w') as f:
         f.write(cql_final)
 
-def cql_from_json_with_entities(input_json):
-    
+def cql_from_json_with_entities(data):
+
     # Written to support creating CQL from a pre-specified JSON file
-    
+
     entityLibrary = {}
-    
-    with open(input_json) as f:
-        data = json.load(f)
-        
+
+
     scriptType = data['type']
     if scriptType == 'IndexEventAndInclusion':
         script = IndexEventAndInclusionScript(data)
     #print(script)
-    
+
     return STU3Generator.generate(script)
 
 if __name__ == "__main__":
     # parse_questions_from_feature_csv(folder_prefix = '', form_name =  'testcsv', description = 'Test Definition')
-    
+
     parser = argparse.ArgumentParser(description='Process an input json to create a CQL script.')
     parser.add_argument('--input', help='optional input json, assumes file name of input_json.json')
     parser.add_argument("--output", help="optional output file name, assumes same name as input")
@@ -315,21 +313,23 @@ if __name__ == "__main__":
     if args.output:
         output_file = args.output
 
-    with open(output_file, 'w+') as f:
-        f.write(cql_from_json_with_entities(input_file))
+    with open(input_file) as f:
+        data = json.load(f)
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    with open(output_file, 'w+') as f:
+        f.write(cql_from_json_with_entities(data))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
