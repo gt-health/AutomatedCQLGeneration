@@ -1,6 +1,6 @@
 library Syphilis_Laboratory_Tests_Results version '1.0'
-using FHIR version '3.0.0'
-include FHIRHelpers version '3.0.0' called FHIRHelpers
+using FHIR version '4.0.0'
+include FHIRHelpers version '4.0.0' called FHIRHelpers
 
 codesystem "SNOMED": 'http://snomed.info/sct'
 codesystem "LOINC": 'http://loinc.org'
@@ -10,6 +10,7 @@ define "SyphilisDiagnosisConcept": Concept {
 	Code '444150000' from "SNOMED"
 }
 define "SyphilisLabConcept": Concept {
+	Code '6660-5' from "LOINC",
 	Code '8041-6' from "LOINC",
 	Code '17723-8' from "LOINC",
 	Code '24110-9' from "LOINC",
@@ -65,7 +66,6 @@ define "SyphilisLabConcept": Concept {
 	Code '17728-7' from "LOINC",
 	Code '29310-0' from "LOINC",
 	Code '26658-5' from "LOINC",
-	Code '6660-5' from "LOINC",
 	Code '6580-7' from "LOINC",
 	Code '22588-8' from "LOINC",
 	Code '22589-6' from "LOINC",

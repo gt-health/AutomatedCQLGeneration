@@ -7,7 +7,7 @@ class BaseEntity:
     def __repr__(self):
         print('Trying to print entity of type ', self.entityType)
         return str(vars(self))
-    
+
 class BaseScript:
     def __init__(self, data):
         self.scriptType = 'BaseScript'
@@ -74,7 +74,7 @@ class NonEntity:
         self.fields = fields
 
 
-    
+
 class IndexEventAndInclusionScript(BaseScript):
     def __init__(self, data):
         super().__init__(data)
@@ -87,8 +87,8 @@ class IndexEventAndInclusionScript(BaseScript):
         except KeyError:
             pass
         self.returnAggregator = AggregateEntity(data['returnAggregator'])
-        
-        
+
+
 class ConceptEntity(BaseEntity):
     def __init__(self, data):
         super().__init__()
@@ -96,7 +96,7 @@ class ConceptEntity(BaseEntity):
         self.name = data['name']
         if type(data['codesets']) == str: self.codesets = data['codesets']
         else: self.codesets = list(map(lambda x: CodesetEntity(x), data['codesets']))
-        
+
 class CodesetEntity(BaseEntity):
     def __init__(self, data):
         super().__init__()
@@ -112,7 +112,7 @@ class IndexEventEntity(SimpleRetrievalEntity):
         self.conceptReference = data['conceptReference']
         self.returnField = data['returnField']
         self.returnType = data['returnType']
-        
+
 class InclusionEntity(BaseEntity):
     def __init__(self, data):
         super().__init__()
@@ -121,9 +121,12 @@ class InclusionEntity(BaseEntity):
         self.fhirResource = data['fhirResource']
         self.conceptReference = data['conceptReference']
         self.filterType = data['filterType']
-        if checkForTimeFrame(data['timeFrameRelativeToIndexEvent']):
-            self.timeFrame = TimeFrameEntity(data['timeFrameRelativeToIndexEvent'])
-        else: self.timeFrame = None
+        try:
+            if checkForTimeFrame(data['timeFrameRelativeToIndexEvent']):
+                self.timeFrame = TimeFrameEntity(data['timeFrameRelativeToIndexEvent'])
+            else: self.timeFrame = None
+        except KeyError:
+            self.timeFrame = None
 
 class DerivedEntity(BaseEntity):
     def __init__(self, data):

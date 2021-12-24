@@ -1,48 +1,43 @@
 {
     "name": "Syphilis_Laboratory_Tests_Results",
     "type": "IndexEventAndInclusion",
-    "concepts":[
-      {
-        "name": "SyphilisDiagnosisConcept",
-        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868973/expression"
-      },
-      {
-        "name": "SyphilisLabConcept",
-        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1869028/expression"
-      }
+    "concepts": [{
+            "name": "SyphilisDiagnosisConcept",
+            "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868973/expression"
+        },
+        {
+            "name": "SyphilisLabConcept",
+            "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1869028/expression"
+        }
     ],
     "indexEvent": {
-      "name": "Syphilis_Condition",
-      "fhirResource": "Condition",
-      "conceptReference": "SyphilisDiagnosisConcept",
-      "returnField": "Onset",
-      "returnType" : "dateTime"
+        "name": "Syphilis_Condition",
+        "fhirResource": "Condition",
+        "conceptReference": "SyphilisDiagnosisConcept",
+        "returnField": "Onset",
+        "returnType": "dateTime"
     },
-    "inclusions": [
-      {
+    "inclusions": [{
         "name": "SyphillisTest_Lab",
         "fhirResource": "Observation",
         "conceptReference": "SyphilisLabConcept",
         "filterType": "",
         "timeFrameRelativeToIndexEvent": ""
-      }
-    ],
-  "deriveds": [
-    {
-      "name": "Syphilis_Test_Type",
-      "baseInclusion": "SyphillisTest_Lab",
-      "fhirField": "code",
-      "fhirReturnResource":"Observation",
-      "questionConcept": "20000000671",
-      "answerValue": {
-        "valueType": "String",
-        "renderAnswerWithCQL": true,
-        "value": "target.code.coding[0].system+' '+target.code.coding[0].code"
-      },
-      "sourceNote": "target.code.coding[0].code+'^'+target.code.coding[0].system"
-    }
-  ],
-    "returnAggregator" :{
-      "type": "union"
+    }],
+    "deriveds": [{
+        "name": "Syphilis_Test_Type",
+        "baseInclusion": "SyphillisTest_Lab",
+        "fhirField": "code",
+        "fhirReturnResource": "Observation",
+        "questionConcept": "20000000671",
+        "answerValue": {
+            "valueType": "String",
+            "renderAnswerWithCQL": true,
+            "value": "target.code.coding[0].system+' '+target.code.coding[0].code"
+        },
+        "sourceNote": "target.code.coding[0].code+'^'+target.code.coding[0].system"
+    }],
+    "returnAggregator": {
+        "type": "union"
     }
 }
