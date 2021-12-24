@@ -1,0 +1,100 @@
+{
+    "name": "Syphilis_Lab_Results",
+    "type": "IndexEventAndInclusion",
+    "concepts":[
+      {
+        "name": "SyphilisConcept",
+        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868973/expression"
+      },
+      {
+        "name": "LabResultConcept",
+        "codesets": "https://atlas-demo.ohdsi.org/#/conceptset/1869028/expression"
+      }
+    ],
+    "indexEvent": {
+      "name": "Syphilis_Condition",
+      "fhirResource": "Condition",
+      "conceptReference": "SyphilisConcept",
+      "returnField": "Onset",
+      "returnType" : "dateTime"
+    },
+    "inclusions": [
+      {
+        "name": "Lab_Result_Observation",
+        "fhirResource": "Observation",
+        "conceptReference": "LabResultConcept",
+        "filterType": "",
+        "timeFrameRelativeToIndexEvent": ""
+      }
+    ],
+  "deriveds": [
+    {
+      "name": "Lab_Result_Quantity",
+      "baseInclusion": "Lab_Result_Observation",
+      "fhirField": "value.valueQuantity",
+      "fhirReturnResource": "Observation",
+      "questionConcept": "20000008",
+      "answerValue": {
+        "valueType": "String",
+        "renderAnswerWithCQL": true,
+        "value": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueQuantity.comparator+'^'+target.valueQuantity.value+'^'+target.valueQuantity.unit"
+      },
+      "sourceNote": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueQuantity.comparator+'^'+target.valueQuantity.value+'^'+target.valueQuantity.unit"
+    },
+    {
+      "name": "Lab_Result_Integer",
+      "baseInclusion": "Lab_Result_Observation",
+      "fhirField": "value.valueInteger",
+      "fhirReturnResource": "Observation",
+      "questionConcept": "20000008",
+      "answerValue": {
+        "valueType": "String",
+        "renderAnswerWithCQL": true,
+        "value": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueInteger"
+      },
+      "sourceNote": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueInteger"
+    },
+    {
+      "name": "Lab_Result_Ratio",
+      "baseInclusion": "Lab_Result_Observation",
+      "fhirField": "value.valueRatio",
+      "fhirReturnResource": "Observation",
+      "questionConcept": "20000008",
+      "answerValue": {
+        "valueType": "String",
+        "renderAnswerWithCQL": true,
+        "value": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueRatio.numerator.value+':'+target.valueRatio.denominator.value"
+      },
+      "sourceNote": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.valueRatio.numerator.value+':'+target.valueRatio.denominator.value"
+    },
+    {
+      "name": "Lab_Result_Observation_CodeableConcept",
+      "baseInclusion": "Lab_Result_Observation",
+      "fhirField": "value.valueCodeableConcept",
+      "fhirReturnResource": "Observation",
+      "questionConcept": "20000008",
+      "answerValue": {
+        "valueType": "String",
+        "renderAnswerWithCQL": true,
+        "value": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.value.coding[0].system+'^'+target.value.coding[0].code"
+      },
+      "sourceNote": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.value.coding[0].system+'^'+target.value.coding[0].code"
+    },
+    {
+      "name": "Lab_Result_Observation_String",
+      "baseInclusion": "Lab_Result_Observation",
+      "fhirField": "value.valueString",
+      "fhirReturnResource": "Observation",
+      "questionConcept": "20000008",
+      "answerValue": {
+        "valueType": "String",
+        "renderAnswerWithCQL": true,
+        "value": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.value+'^'+target.value"
+      },
+      "sourceNote": "target.effectiveDateTime+'^'+target.code.coding[0].system+'^'+target.code.coding[0].code+'^'+target.value+'^'+target.value"
+    }
+  ],
+  "returnAggregator" :{
+    "type": "union"
+  }
+}
