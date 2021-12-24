@@ -20,6 +20,7 @@ resource_temporal_map = {'Encounter': 'period.start',
                          'MedicationRequest': 'authoredOn',
                          'MedicationStatement': 'effective'
                          }
+
 fhir_choice_fields_map = {
     'abatement': ['DateTime','Age'],
     'deceased': ['Boolean','DateTime'],
@@ -35,6 +36,16 @@ fhir_choice_fields_map = {
     'value': ['Quantity','CodeableConcept','String','Boolean','Integer','Ratio','SampledData','Time','DateTime','Period']
 }
 
+fhir_choice_fields_typing_default_map = {
+    'abatement': 'ToString(FHIRHelpers.ToDateTime(target.abatement as FHIR.dateTime))',
+    'effectiveDateTime': 'ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))',
+    'effectivePeriod': 'ToString(FHIRHelpers.ToDateTime(target.effective.start as FHIR.dateTime))',
+    'effective': 'ToString(FHIRHelpers.ToDateTime(msConvertEffective(target)))',
+    'onset': 'ToString(FHIRHelpers.ToDateTime(target.onset as FHIR.dateTime))',
+    'dosage[0].dose': 'ToString(FHIRHelpers.ToQuantity((target.dosage[0].dose as FHIR.Quantity)))'
+}
+
+msConvertEffectiveFunction = '''\n// Helper Functions\ndefine function msConvertEffective(medStatments List<FHIR.MedicationStatement>):\n\tmedStatments S\n\t\treturn\n\t\t\tcase\n\t\t\t\twhen (S.effective as FHIR.dateTime) is not null then (S.effective as FHIR.dateTime)\n\t\t\t\twhen (S.effective.start as FHIR.dateTime) is not null then (S.effective.start as FHIR.dateTime)\n\t\t\t\telse null\n\t\t\tend'''
 
 cql_codesystem = '''codesystem "{}": '{}'
 '''

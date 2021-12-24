@@ -32,7 +32,8 @@ class STU3Generator:
         inclusions, inclusion_names = STU3Generator.generateInclusions(script.inclusions, aggregatorEntity)
         deriveds = STU3Generator.generateDervied(script.deriveds)
         aggregator = STU3Generator.generateAggregator(inclusion_names, aggregatorEntity)
-        output = '\n'.join([header, codesystems, concepts, '''context Patient\n''', indexEvent, inclusions, deriveds, aggregator])
+        functions = STU3Generator.includeFunctions()
+        output = '\n'.join([header, codesystems, concepts, '''context Patient\n''', indexEvent, inclusions, deriveds, aggregator, functions])
         return output
 
     def generateCodesystems(concepts):
@@ -162,13 +163,23 @@ class STU3Generator:
             else:
                 baseFinalName = derived.baseInclusion
             
+            # put in default typing for sourceNote here
+            try:
+                sourceNote = STU3Templates.fhir_choice_fields_typing_default_map[derived.fhirField].format(derived.sourceNote)
+            except KeyError:
+                sourceNote = derived.sourceNote
+
+
             if not derived.answerValue.renderAnswerWithCQL:
                 answerValue = ''.join(['\'',derived.answerValue.value, '\''])
             else:
-                answerValue = derived.answerValue.value
+                try:
+                    answerValue = STU3Templates.fhir_choice_fields_typing_default_map[derived.fhirField].format(derived.answerValue.value)
+                except KeyError:
+                    answerValue = derived.answerValue.value
 
             derived_cql = STU3Templates.cql_shaping_derived.format(derived.name, baseFinalName, derived.fhirField,
-                                                                   derived.questionConcept, derived.sourceNote,
+                                                                   derived.questionConcept, sourceNote,
                                                                    answerValue, derived.answerValue.valueType)
             deriveds_cql_list.append(derived_cql)
         derived_output = '\n'.join(deriveds_cql_list)
@@ -182,6 +193,8 @@ class STU3Generator:
                 else: aggregate_cql_list.append(STU3Templates.cql_aggregator_suffix.format(aggregator.aggregateType, name))
             aggregate_output = ''.join(aggregate_cql_list)
             return aggregate_output
+        else:
+            return ''
 
     def handleChoice(choice_field_name):
         choice_types = STU3Templates.fhir_choice_fields_map[choice_field_name]
@@ -191,7 +204,9 @@ class STU3Generator:
             choice_texts.append(choice_text)
         return '\n'.join(choice_texts)
 
-
     def generateChoiceOptionHandler(input_field_name,choice_type):
         #STU3Template.${choice_type}_handler.format(input_field_name)
         return ''
+
+    def includeFunctions():
+        return STU3Templates.msConvertEffectiveFunction

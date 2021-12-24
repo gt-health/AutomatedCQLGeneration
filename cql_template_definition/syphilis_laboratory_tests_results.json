@@ -1,5 +1,5 @@
 {
-    "name": "Syphilis_Medication_Treatment",
+    "name": "Syphilis_Laboratory_Tests_Results",
     "type": "IndexEventAndInclusion",
     "concepts":[
       {
@@ -24,10 +24,7 @@
         "fhirResource": "Observation",
         "conceptReference": "SyphilisLabConcept",
         "filterType": "",
-        "timeFrameRelativeToIndexEvent": {
-            "start": "- 2 weeks",
-            "end": "+ 4 weeks"
-        }
+        "timeFrameRelativeToIndexEvent": ""
       }
     ],
   "deriveds": [

@@ -1,24 +1,27 @@
 {
-    "name": "Syphilis_Medication_Treatment",
+    "name": "Simple_Event_Inclusion",
     "type": "EventAndInclusion",
-    "concepts":[{
-        "name": "SyphilisConcept",
-        "codesets": [{
-              "codelist" : ["76272004","444150000"],
-              "system": "http://snomed.info/sct"
-        }]},
-      {
-        "name": "PenicillinConcept",
-        "codesets": [{
-           "codelist" : ["7984", "7980"] ,
-            "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
-          }]}],
+    "concepts": [{
+            "name": "SyphilisConcept",
+            "codesets": [{
+                "codelist": ["76272004", "444150000"],
+                "system": "http://snomed.info/sct"
+            }]
+        },
+        {
+            "name": "PenicillinConcept",
+            "codesets": [{
+                "codelist": ["7984", "7980"],
+                "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+            }]
+        }
+    ],
     "event": {
-      "name": "Syphilis_Condition",
-      "fhirResource": "Condition",
-      "concept": "SyphilisConcept",
-      "returnField": "Onset",
-      "returnType" : "dateTime"
+        "name": "Syphilis_Condition",
+        "fhirResource": "Condition",
+        "concept": "SyphilisConcept",
+        "returnField": "Onset",
+        "returnType": "dateTime"
     },
     "inclusions": [{
         "name": "Penicillin_MS",
@@ -30,9 +33,11 @@
         "sourceValue": "target.medication.coding[0].code+'^'+target.medication.coding[0].system",
         "filterType": "First",
         "timeFrame": {
-          "start": "+ 2 weeks",
-          "end": "+ 4 weeks"
-        }}],
-    "returnAggregator" :{
-      "type": "union"
-    }}
+            "start": "+ 2 weeks",
+            "end": "+ 4 weeks"
+        }
+    }],
+    "returnAggregator": {
+        "type": "union"
+    }
+}
