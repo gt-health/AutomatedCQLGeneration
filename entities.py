@@ -85,8 +85,11 @@ class IndexEventAndInclusionScript(BaseScript):
         try:
             self.deriveds = list(map(lambda x: DerivedEntity(x), data['deriveds']))
         except KeyError:
-            pass
-        self.returnAggregator = AggregateEntity(data['returnAggregator'])
+            self.deriveds = None
+        try:
+            self.returnAggregator = AggregateEntity(data['returnAggregator'])
+        except KeyError:
+            self.returnAggregator = None
 
 
 class ConceptEntity(BaseEntity):

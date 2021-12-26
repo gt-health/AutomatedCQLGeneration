@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser.add_argument('--input', help='optional input json, assumes file name of input_json.json')
     parser.add_argument("--output", help="optional output file name, assumes same name as input")
     args = parser.parse_args()
-    input_file = 'cql_template_definition/syphilis_medication_treatment.json'
+    input_file = 'cql_template_definition/Simple_Event_Inclusion.json'
     if args.input:
         input_file = args.input
     input_split = re.split('/|\.', input_file)

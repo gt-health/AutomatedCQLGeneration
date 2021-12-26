@@ -30,16 +30,25 @@ class R4Generator:
         if script.returnAggregator:
             aggregatorEntity = script.returnAggregator
         inclusions, inclusion_names = R4Generator.generateInclusions(script.inclusions, aggregatorEntity)
-        deriveds = R4Generator.generateDervied(script.deriveds)
+        deriveds = ''
+        if script.deriveds is not None:
+            deriveds = R4Generator.generateDervied(script.deriveds)
         aggregator = R4Generator.generateAggregator(inclusion_names, aggregatorEntity)
-        functions = R4Generator.includeFunctions()
-        output = '\n'.join([header, codesystems, concepts, '''context Patient\n''', indexEvent, inclusions, deriveds, aggregator, functions])
+
+        # TODO: Figure out what functions to include and when
+        #functions = R4Generator.includeFunctions()
+
+        output = '\n'.join([header, codesystems, concepts, '''context Patient\n''', indexEvent, inclusions, deriveds, aggregator])
         return output
 
     def generateCodesystems(concepts):
         unique_codesystems = set()
-        for concept in concepts:
-            for codeset in concept.codesets:
+        if type(concepts)==list:
+            for concept in concepts:
+                for codeset in concept.codesets:
+                    unique_codesystems.add(codeset.system)
+        else:
+            for codeset in concepts.codesets:
                 unique_codesystems.add(codeset.system)
 
         codesystems_output = ''
@@ -78,15 +87,26 @@ class R4Generator:
 
         concepts_cql_list = []
 
-        for concept in concepts:
+        if type(concepts)==list:
+            for concept in concepts:
+                concept_code_values = []
+                for codeset in concept.codesets:
+                    codesystem_common_name = R4Generator.getCommonCodesystemName(codeset.system)
+                    for code in codeset.codelist:
+                        concept_code_values.append(R4Templates.cql_concept_code_template.format(code, codesystem_common_name))
+
+                concept_values_block = ',\n\t'.join(concept_code_values)
+                concept_cql = R4Templates.cql_concept_template.format(concept.name, concept_values_block)
+                concepts_cql_list.append(concept_cql)
+        else:
             concept_code_values = []
-            for codeset in concept.codesets:
+            for codeset in concepts.codesets:
                 codesystem_common_name = R4Generator.getCommonCodesystemName(codeset.system)
                 for code in codeset.codelist:
                     concept_code_values.append(R4Templates.cql_concept_code_template.format(code, codesystem_common_name))
 
             concept_values_block = ',\n\t'.join(concept_code_values)
-            concept_cql = R4Templates.cql_concept_template.format(concept.name, concept_values_block)
+            concept_cql = R4Templates.cql_concept_template.format(concepts.name, concept_values_block)
             concepts_cql_list.append(concept_cql)
 
         concepts_output = '\n'.join(concepts_cql_list)

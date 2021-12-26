@@ -1,6 +1,6 @@
 {
     "name": "Simple_Event_Inclusion",
-    "type": "EventAndInclusion",
+    "type": "IndexEventAndInclusion",
     "concepts": [{
             "name": "SyphilisConcept",
             "codesets": [{
@@ -16,17 +16,17 @@
             }]
         }
     ],
-    "event": {
+    "indexEvent": {
         "name": "Syphilis_Condition",
         "fhirResource": "Condition",
-        "concept": "SyphilisConcept",
+        "conceptReference": "SyphilisConcept",
         "returnField": "Onset",
         "returnType": "dateTime"
     },
     "inclusions": [{
         "name": "Penicillin_MS",
         "fhirResource": "MedicationStatement",
-        "concept": "PenicillinConcept",
+        "conceptReference": "PenicillinConcept",
         "resultType": "Drug",
         "questionConcept": "20000005",
         "answerValue": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G",
@@ -36,8 +36,5 @@
             "start": "+ 2 weeks",
             "end": "+ 4 weeks"
         }
-    }],
-    "returnAggregator": {
-        "type": "union"
-    }
+    }]
 }

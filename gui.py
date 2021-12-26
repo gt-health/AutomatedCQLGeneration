@@ -10,25 +10,28 @@ from automated_cql_generation import *
 file_viewer_column = [
     [
         sg.Text("Input JSON File: "),
-        sg.In(enable_events=True, key="-FILE-", size=(73, 1)),
+        sg.In(enable_events=True, key="-FILE-", size=(88, 1)),
         sg.FileBrowse()
     ],
-    [sg.Multiline(key='-FILEOUT-', auto_size_text=True, font=('Courier New', 15), size=(63, 43))],
+    [sg.Multiline(key='-FILEOUT-', auto_size_text=True, font=('Courier New', 15), size=(73, 48))],
     [sg.Button('Convert', key='-STARTCONVERT-')]
 ]
 
 output_viewer_column = [
     [sg.Text('Output CQL')],
-    [sg.Multiline('No output generated yet', key='-CQLOUTPUT-', size=(60,43), font=('Courier New', 15))],
+    [sg.Multiline('No output generated yet', key='-CQLOUTPUT-', size=(68,49), font=('Courier New', 15))],
     [sg.Input(key='-SAVEAS-FILENAME-', visible=False, enable_events=True), sg.FileSaveAs('Save to File', default_extension='cql')]
 ]
 
+column_size = (700, 900)
 layout = [[
-    sg.Column(file_viewer_column, size=(600, 800)),
+    sg.Column(file_viewer_column, size=column_size),
     sg.VSeperator(),
-    sg.Column(output_viewer_column)
+    sg.Column(output_viewer_column, size=column_size)
 ]]
-window = sg.Window('Automated CQL Generation', layout, size=(1200,820), resizable=True)
+
+sg.theme('NeutralBlue')
+window = sg.Window('Automated CQL Generation', layout, size=(1400,920), resizable=True)
 
 try:
     while True:
@@ -52,7 +55,7 @@ try:
 
         if event == '-SAVEAS-FILENAME-':
             outfile_name = values['-SAVEAS-FILENAME-']
-            if outfile_name is not '':
+            if outfile_name != '':
                 with open(outfile_name, 'w') as f:
                     f.write(values['-CQLOUTPUT-'])
 except Exception as e:
