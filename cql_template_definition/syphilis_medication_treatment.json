@@ -1,130 +1,127 @@
 {
     "name": "Syphilis_Medication_Treatment",
     "type": "IndexEventAndInclusion",
-    "concepts":[
-      {
-        "name": "SyphilisConcept",
-        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868973/expression"
-      },
-      {
-        "name": "PenicillinConcept",
-        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868960/expression"
-      },
-      {
-        "name": "CeftriaxoneConcept",
-        "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868961/expression"
-      }
+    "concepts": [{
+            "name": "SyphilisConcept",
+            "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868973/expression"
+        },
+        {
+            "name": "PenicillinConcept",
+            "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868960/expression"
+        },
+        {
+            "name": "CeftriaxoneConcept",
+            "codesets": "http://atlas-demo.ohdsi.org/#/conceptset/1868961/expression"
+        }
     ],
     "indexEvent": {
-      "name": "Syphilis_Condition",
-      "fhirResource": "Condition",
-      "conceptReference": "SyphilisConcept",
-      "returnField": "Onset",
-      "returnType" : "dateTime"
+        "name": "Syphilis_Condition",
+        "fhirResource": "Condition",
+        "conceptReference": "SyphilisConcept",
+        "returnField": "Onset",
+        "returnType": "dateTime"
     },
-    "inclusions": [
-      {
-        "name": "Penicillin_MS",
-        "fhirResource": "MedicationStatement",
-        "conceptReference": "PenicillinConcept",
-        "filterType": "",
-        "timeFrameRelativeToIndexEvent": {
-            "start": "",
-            "end": ""
+    "inclusions": [{
+            "name": "Penicillin_MS",
+            "fhirResource": "MedicationStatement",
+            "conceptReference": "PenicillinConcept",
+            "filterType": "",
+            "timeFrameRelativeToIndexEvent": {
+                "start": "",
+                "end": ""
+            }
+        },
+        {
+            "name": "Ceftriaxone_MS",
+            "fhirResource": "MedicationStatement",
+            "conceptReference": "CeftriaxoneConcept",
+            "filterType": "",
+            "timeFrameRelativeToIndexEvent": {
+                "start": "+ 0 weeks",
+                "end": "+ 4 weeks"
+            }
         }
-      },
-      {
-        "name": "Ceftriaxone_MS",
-        "fhirResource": "MedicationStatement",
-        "conceptReference": "CeftriaxoneConcept",
-        "filterType": "",
-        "timeFrameRelativeToIndexEvent": {
-            "start": "+ 0 weeks",
-            "end": "+ 4 weeks"
-        }
-      }
     ],
-  "deriveds": [
-    {
-      "name": "Penicillin_MS_Medication",
-      "baseInclusion": "Penicillin_MS",
-      "fhirField": "medication.coding[0].code",
-      "fhirReturnResource": "Observation",
-      "questionConcept": "200000055",
-      "answerValue": {
-        "valueType": "String",
-        "renderAnswerWithCQL": false,
-        "value": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G"
-      },
-      "sourceNote": "target.medication.coding[0].code+'^'+target.medication.coding[0].system"
-    },
-    {
-      "name": "Penicillin_MS_Dosage",
-      "baseInclusion": "Penicillin_MS",
-      "fhirField": "dosage[0].dose",
-      "fhirReturnResource": "Observation",
-      "questionConcept": "200000066",
-      "answerValue": {
-        "valueType": "Quantity",
-        "renderAnswerWithCQL": true,
-        "value": "target.dosage[0].dose as FHIR.Quantity"
-      },
-      "sourceNote": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
-    },
-    {
-      "name": "Penicillin_MS_Date_Medication_Started",
-      "baseInclusion": "Penicillin_MS",
-      "fhirField": "effective",
-      "fhirReturnResource": "Observation",
-      "questionConcept": "200000077",
-      "answerValue": {
-        "valueType": "String",
-        "renderAnswerWithCQL": true,
-        "value": "target.effective as FHIR.dateTime"
-      },
-      "sourceNote": "ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))"
-    },
-    {
-      "name": "Ceftriaxone_MS_Medication",
-      "baseInclusion": "Ceftriaxone_MS",
-      "fhirField": "medication.coding[0].code",
-      "fhirReturnResource": "Observation",
-      "questionConcept": "200000055",
-      "answerValue": {
-        "valueType": "String",
-        "renderAnswerWithCQL": false,
-        "value": "http://www.nlm.nih.gov/research/umls/rxnorm^1665021^ceftriaxone 1000 mg injection"
-      },
-      "sourceNote": "target.medication.coding[0].code+'^'+target.medication.coding[0].system"
-    },
-    {
-      "name": "Ceftriaxone_MS_Dosage",
-      "baseInclusion": "Ceftriaxone_MS",
-      "fhirField": "dosage[0].dose",
-      "fhirReturnResource": "Observation",
-      "questionConcept": "200000066",
-      "answerValue": {
-        "valueType": "Quantity",
-        "renderAnswerWithCQL": true,
-        "value": "target.dosage[0].dose as FHIR.Quantity"
-      },
-      "sourceNote": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
-    },
-    {
-      "name": "Ceftriaxone_MS_Date_Medication_Started",
-      "baseInclusion": "Ceftriaxone_MS",
-      "fhirField": "effective",
-      "fhirReturnResource": "Observation",
-      "questionConcept": "200000077",
-      "answerValue": {
-        "valueType": "String",
-        "renderAnswerWithCQL": true,
-        "value": "target.effective as FHIR.dateTime"
-      },
-      "sourceNote": "ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))"
-    }
-  ],
-    "returnAggregator" :{
-      "type": "union"
+    "deriveds": [{
+            "name": "Penicillin_MS_Medication",
+            "baseInclusion": "Penicillin_MS",
+            "fhirField": "medication.coding[0].code",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "200000055",
+            "answerValue": {
+                "valueType": "String",
+                "renderAnswerWithCQL": false,
+                "value": "http://www.nlm.nih.gov/research/umls/rxnorm^7980^penicillin G"
+            },
+            "sourceNote": "target.medication.coding[0].code+'^'+target.medication.coding[0].system"
+        },
+        {
+            "name": "Penicillin_MS_Dosage",
+            "baseInclusion": "Penicillin_MS",
+            "fhirField": "dosage[0].dose",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "200000066",
+            "answerValue": {
+                "valueType": "Quantity",
+                "renderAnswerWithCQL": true,
+                "value": "target.dosage[0].dose as FHIR.Quantity"
+            },
+            "sourceNote": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
+        },
+        {
+            "name": "Penicillin_MS_Date_Medication_Started",
+            "baseInclusion": "Penicillin_MS",
+            "fhirField": "effective",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "200000077",
+            "answerValue": {
+                "valueType": "String",
+                "renderAnswerWithCQL": true,
+                "value": "target.effective as FHIR.dateTime"
+            },
+            "sourceNote": "ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))"
+        },
+        {
+            "name": "Ceftriaxone_MS_Medication",
+            "baseInclusion": "Ceftriaxone_MS",
+            "fhirField": "medication.coding[0].code",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "200000055",
+            "answerValue": {
+                "valueType": "String",
+                "renderAnswerWithCQL": false,
+                "value": "http://www.nlm.nih.gov/research/umls/rxnorm^1665021^ceftriaxone 1000 mg injection"
+            },
+            "sourceNote": "target.medication.coding[0].code+'^'+target.medication.coding[0].system"
+        },
+        {
+            "name": "Ceftriaxone_MS_Dosage",
+            "baseInclusion": "Ceftriaxone_MS",
+            "fhirField": "dosage[0].dose",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "200000066",
+            "answerValue": {
+                "valueType": "Quantity",
+                "renderAnswerWithCQL": true,
+                "value": "target.dosage[0].dose as FHIR.Quantity"
+            },
+            "sourceNote": "ToString(FHIRHelpers.ToQuantity((\"target\".dosage[0].dose as FHIR.Quantity)))"
+        },
+        {
+            "name": "Ceftriaxone_MS_Date_Medication_Started",
+            "baseInclusion": "Ceftriaxone_MS",
+            "fhirField": "effective",
+            "fhirReturnResource": "Observation",
+            "questionConcept": "200000077",
+            "answerValue": {
+                "valueType": "String",
+                "renderAnswerWithCQL": true,
+                "value": "target.effective as FHIR.dateTime"
+            },
+            "sourceNote": "ToString(FHIRHelpers.ToDateTime(target.effective as FHIR.dateTime))"
+        }
+    ],
+    "returnAggregator": {
+        "type": "union"
     }
 }

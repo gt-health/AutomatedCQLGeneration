@@ -13,13 +13,13 @@ file_viewer_column = [
         sg.In(enable_events=True, key="-FILE-", size=(88, 1)),
         sg.FileBrowse()
     ],
-    [sg.Multiline(key='-FILEOUT-', auto_size_text=True, font=('Courier New', 15), size=(73, 48))],
+    [sg.Multiline('No Input File Selected', key='-FILEOUT-', auto_size_text=True, font=('Courier New', 15), size=(73, 48))],
     [sg.Button('Convert', key='-STARTCONVERT-')]
 ]
 
 output_viewer_column = [
     [sg.Text('Output CQL')],
-    [sg.Multiline('No output generated yet', key='-CQLOUTPUT-', size=(68,49), font=('Courier New', 15))],
+    [sg.Multiline('No Output Generated Yet', key='-CQLOUTPUT-', size=(68,49), font=('Courier New', 15))],
     [sg.Input(key='-SAVEAS-FILENAME-', visible=False, enable_events=True), sg.FileSaveAs('Save to File', default_extension='cql')]
 ]
 

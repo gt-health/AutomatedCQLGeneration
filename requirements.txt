@@ -1,6 +1,8 @@
 certifi==2021.5.30
 charset-normalizer==2.0.4
 idna==3.2
+opencv-python-headless==4.5.5.62
+pyedifice==0.0.10
 PySimpleGUI==4.45.0
 python-dateutil==2.8.2
 requests==2.26.0

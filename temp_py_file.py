@@ -1,0 +1,3 @@
+Label('\t"deriveds": ['),
+*[Label('\t\t{\n\t\t\t"name": "'+deriveds_state.subscribe(self, f'{derived_name}.name').value+'",\n\t\t\t"baseInclusion": "'+deriveds_state.subscribe(self, f'{derived_name}.baseInclusion').value+'",\n\t\t\t"fhirField": "'+deriveds_state.subscribe(self, f'{derived_name}.fhirField').value+'",\n\t\t\t"fhirReturnResource": "'+deriveds_state.subscribe(self, f'{derived_name}.fhirReturnResource').value+'",\n\t\t\t"questionConcept": "'+deriveds_state.subscribe(self, f'{derived_name}.questionConcept').value+'",\n\t\t\t"answerValue": {\n\t\t\t\t"valueType": "'+deriveds_state.subscribe(self, f'{derived_name}.answerValueType').value+'",\n\t\t\t\t') for derived_name in all_deriveds],
+Label('\t\t},'),
